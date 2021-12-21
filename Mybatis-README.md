@@ -2,7 +2,7 @@
 
 ### Mybatis中的设计模式
 
-#### 1、适配器模式
+### 1、适配器模式
 
 适配器模式主要解决的是由于接口不能兼容而导致类无法使用的问题，这在处理遗留代码以及集成第三方框架的时候用得比较多。其核心原理是：通过组合的方式，将需要适配的类转换成使用者能够使用的接口。
 
@@ -77,3 +77,36 @@ JDBC 连接的创建是非常耗时的，从数据库这一侧看，能够建立
 控制数据库连接上限，防止连接过多造成数据库假死；
 
 统一管理数据库连接，避免连接泄漏。
+
+
+
+### 4、装饰器模式
+
+装饰器模式就是一种通过组合方式实现扩展的设计模式，它可以完美地解决上述功能增强的问题。装饰器的核心思想是为已有实现类创建多个包装类，由这些新增的包装类完成新需求的扩展。
+
+装饰器模式使用的是组合方式，相较于继承这种静态的扩展方式，装饰器模式可以在运行时根据系统状态，动态决定为一个实现类添加哪些扩展功能。
+
+装饰器模式的核心类图，如下所示：
+
+![Drawing 1.png](https://s0.lgstatic.com/i/image6/M01/05/74/Cgp9HWAwwdGAWEZ4AAG1zgT1MQM431.png)
+
+从图中可以看到，装饰器模式中的核心类主要有下面四个。
+
+Component 接口：已有的业务接口，是整个功能的核心抽象，定义了 Decorator 和 ComponentImpl 这些实现类的核心行为。JDK 中的 IO 流体系就使用了装饰器模式，其中的 InputStream 接口就扮演了 Component 接口的角色。
+
+ComponentImpl 实现类：实现了上面介绍的 Component 接口，其中实现了 Component 接口最基础、最核心的功能，也就是被装饰的、原始的基础类。在 JDK IO 流体系之中的 FileInputStream 就扮演了 ComponentImpl 的角色，它实现了读取文件的基本能力，例如，读取单个 byte、读取 byte[] 数组。
+
+Decorator 抽象类：所有装饰器的父类，实现了 Component 接口，其核心不是提供新的扩展能力，而是封装一个 Component 类型的字段，也就是被装饰的目标对象。需要注意的是，这个被装饰的对象可以是 ComponentImpl 对象，也可以是 Decorator 实现类的对象，之所以这么设计，就是为了实现下图的装饰器嵌套。这里的 DecoratorImpl1 装饰了 DecoratorImpl2，DecoratorImpl2 装饰了 ComponentImpl，经过了这一系列装饰之后得到的 Component 对象，除了具有 ComponentImpl 的基础能力之外，还拥有了 DecoratorImpl1 和 DecoratorImpl2 的扩展能力。JDK IO 流体系中的 FilterInputStream 就扮演了 Decorator 的角色。
+
+
+
+1. BlockingCache
+顾名思义，BlockingCache 是在原有 Cache 实现之上添加了阻塞线程的特性。
+
+最终，我们得到 BlockingCache 的核心原理如下图所示：
+
+![Drawing 4.png](https://s0.lgstatic.com/i/image6/M00/05/72/CioPOWAwwimAGb51AAJd328lR7k035.png)
+
+2. FifoCache
+
+   当 Cache 中的缓存条目达到上限的时候，则会将 Cache 中最早写入的缓存条目清理掉，这也就是先入先出的基本原理。
