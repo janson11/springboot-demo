@@ -13,5 +13,9 @@ mybatis-plus:
 
 server:
   port: 8888
-
-  ## https://mp.weixin.qq.com/s/f0IQAzSy7uId1L2vppC83w
+  tomcat:
+    basedir: /tmp
+    accesslog:
+      enabled: true
+      max-days: 1
+      directory: /tmp
