@@ -99,3 +99,20 @@ Blocked 与 Waiting 的区别是 Blocked 在等待其他线程释放 monitor 锁
 同样在 Timed Waiting 中执行 notify() 和 notifyAll() 也是一样的道理，它们会先进入 Blocked 状态，然后抢夺锁成功后，再回到 Runnable 状态。
 
 当然对于 Timed Waiting 而言，如果它的超时时间到了且能直接获取到锁/join的线程运行结束/被中断/调用了LockSupport.unpark()，会直接恢复到 Runnable 状态，而无需经历 Blocked 状态。
+
+
+
+**4、Terminated 终止**
+
+![img](https://s0.lgstatic.com/i/image/M00/80/2F/CgqCHl_Qf2qAPdCTAAD1YUKiI1s598.png)
+
+再来看看最后一种状态，Terminated 终止状态，要想进入这个状态有两种可能。
+
+run() 方法执行完毕，线程正常退出。
+出现一个没有捕获的异常，终止了 run() 方法，最终导致意外终止。
+
+**注意点**
+最后我们再看线程转换的两个注意点。
+
+线程的状态是需要按照箭头方向来走的，比如线程从 New 状态是不可以直接进入 Blocked 状态的，它需要先经历 Runnable 状态。
+线程生命周期不可逆：一旦进入 Runnable 状态就不能回到 New 状态；一旦被终止就不可能再有任何状态的变化。所以一个线程只能有一次 New 和 Terminated 状态，只有处于中间状态才可以相互转换。
