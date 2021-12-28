@@ -133,3 +133,8 @@ SynchronousQueue
 
 DelayedWorkQueue       
 第三种阻塞队列是DelayedWorkQueue，它对应的线程池分别是 ScheduledThreadPool 和 SingleThreadScheduledExecutor，这两种线程池的最大特点就是可以延迟执行任务，比如说一定时间后执行任务或是每隔一定的时间执行一次任务。DelayedWorkQueue 的特点是内部元素并不是按照放入的时间排序，而是会按照延迟的时间长短对任务进行排序，内部采用的是“堆”的数据结构。之所以线程池 ScheduledThreadPool 和 SingleThreadScheduledExecutor 选择 DelayedWorkQueue，是因为它们本身正是基于时间执行任务的，而延迟队列正好可以把任务按时间进行排序，方便任务的执行。
+
+## 为什么不应该自动创建线程池？
+
+
+FixedThreadPool、SingleThreadPool：使用的是无界队列（LinkedBlockingQueue），当任务堆积很多时，会占用大量内存，最终导致OOM。CachedTheadPool：可以无限创建线程（Integer.MAX_VALUE），任务过多时会导致创建线程达到操作系统上线或者发生OOM。ScheduledThreadPool、SingleThreadScheduledPool：使用的是DelayedWorkQueue队列，实质上也是一种无界队列，会导致OOM。
