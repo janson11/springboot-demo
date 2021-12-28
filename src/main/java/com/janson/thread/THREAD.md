@@ -193,3 +193,56 @@ awaitTermination()
 
 shutdownNow()
 最后一个方法是 shutdownNow()，也是 5 种方法里功能最强大的，它与第一种 shutdown 方法不同之处在于名字中多了一个单词 Now，也就是表示立刻关闭的意思。在执行 shutdownNow 方法之后，首先会给所有线程池中的线程发送 interrupt 中断信号，尝试中断这些任务的执行，然后会将任务队列中正在等待的所有任务转移到一个 List 中并返回，我们可以根据返回的任务 List 来进行一些补救的操作，例如记录在案并在后期重试。shutdownNow() 的源码如下所示。
+
+
+
+
+
+**线程池实现“线程复用”的原理？**
+
+我们接下来具体看看代码是如何实现的，我们从 execute 方法开始分析，源码如下所示。
+
+    public void execute(Runnable command) { 
+    
+    if (command == null) 
+    
+        throw new NullPointerException();
+    
+    int c = ctl.get();
+    
+    if (workerCountOf(c) < corePoolSize) { 
+    
+        if (addWorker(command, true)) 
+    
+            return;
+    
+        c = ctl.get();
+    
+    } 
+    
+    if (isRunning(c) && workQueue.offer(command)) { 
+    
+        int recheck = ctl.get();
+    
+        if (! isRunning(recheck) && remove(command)) 
+    
+            reject(command);
+    
+        else if (workerCountOf(recheck) == 0) 
+    
+            addWorker(null, false);
+    
+    } 
+    
+    else if (!addWorker(command, false)) 
+    
+        reject(command);
+        
+    }    
+
+可以看出，实现线程复用的逻辑主要在一个不停循环的 while 循环体中。
+
+1. 通过取 Worker 的 firstTask 或者通过 getTask 方法从 workQueue 中获取待执行的任务。
+2. 直接调用 task 的 run 方法来执行具体的任务（而不是新建线程）。
+
+在这里，我们找到了最终的实现，通过取 Worker 的 firstTask 或者 getTask方法从 workQueue 中取出了新任务，并直接调用 Runnable 的 run 方法来执行任务，也就是如之前所说的，每个线程都始终在一个大循环中，反复获取任务，然后执行任务，从而实现了线程的复用。
