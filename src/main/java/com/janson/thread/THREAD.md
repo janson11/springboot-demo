@@ -396,3 +396,100 @@ Java 中悲观锁的实现包括 synchronized 关键字和 Lock 相关类等，�
 悲观锁适合用于并发写入多、临界区代码复杂、竞争激烈等场景，这种场景下悲观锁可以避免大量的无用的反复尝试等消耗。
 
 乐观锁适用于大部分是读取，少部分是修改的场景，也适合虽然读写都很多，但是并发并不激烈的场景。在这些场景下，乐观锁不加锁的特点能让性能大幅提高。
+
+
+
+  Last modified 2022年1月1日; size 533 bytes
+  MD5 checksum fc73d1d80fe201809a3fcdd9098003c8
+  Compiled from "SynTest.java"
+public class com.janson.thread.chapter12.SynTest
+  minor version: 0
+  major version: 52
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #5                          // com/janson/thread/chapter12/SynTest
+  super_class: #6                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 1
+Constant pool:
+   #1 = Methodref          #6.#18         // java/lang/Object."<init>":()V
+   #2 = Fieldref           #19.#20        // java/lang/System.out:Ljava/io/PrintStream;
+   #3 = String             #21            // xiaoLi
+   #4 = Methodref          #22.#23        // java/io/PrintStream.println:(Ljava/lang/String;)V
+   #5 = Class              #24            // com/janson/thread/chapter12/SynTest
+   #6 = Class              #25            // java/lang/Object
+   #7 = Utf8               <init>
+   #8 = Utf8               ()V
+   #9 = Utf8               Code
+  #10 = Utf8               LineNumberTable
+  #11 = Utf8               synBlock
+  #12 = Utf8               StackMapTable
+  #13 = Class              #24            // com/janson/thread/chapter12/SynTest
+  #14 = Class              #25            // java/lang/Object
+  #15 = Class              #26            // java/lang/Throwable
+  #16 = Utf8               SourceFile
+  #17 = Utf8               SynTest.java
+  #18 = NameAndType        #7:#8          // "<init>":()V
+  #19 = Class              #27            // java/lang/System
+  #20 = NameAndType        #28:#29        // out:Ljava/io/PrintStream;
+  #21 = Utf8               xiaoLi
+  #22 = Class              #30            // java/io/PrintStream
+  #23 = NameAndType        #31:#32        // println:(Ljava/lang/String;)V
+  #24 = Utf8               com/janson/thread/chapter12/SynTest
+  #25 = Utf8               java/lang/Object
+  #26 = Utf8               java/lang/Throwable
+  #27 = Utf8               java/lang/System
+  #28 = Utf8               out
+  #29 = Utf8               Ljava/io/PrintStream;
+  #30 = Utf8               java/io/PrintStream
+  #31 = Utf8               println
+  #32 = Utf8               (Ljava/lang/String;)V
+{
+  public com.janson.thread.chapter12.SynTest();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 8: 0
+
+  public void synBlock();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=3, args_size=1
+         0: aload_0
+         1: dup
+         2: astore_1
+         3: monitorenter
+         4: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         7: ldc           #3                  // String xiaoLi
+         9: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        12: aload_1
+        13: monitorexit
+        14: goto          22
+        17: astore_2
+        18: aload_1
+        19: monitorexit
+        20: aload_2
+        21: athrow
+        22: return
+      Exception table:
+         from    to  target type
+             4    14    17   any
+            17    20    17   any
+      LineNumberTable:
+        line 10: 0
+        line 11: 4
+        line 12: 12
+        line 13: 22
+      StackMapTable: number_of_entries = 2
+        frame_type = 255 /* full_frame */
+          offset_delta = 17
+          locals = [ class com/janson/thread/chapter12/SynTest, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 250 /* chop */
+          offset_delta = 4
+}
+SourceFile: "SynTest.java"
