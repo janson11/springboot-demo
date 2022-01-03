@@ -493,3 +493,95 @@ Constant pool:
           offset_delta = 4
 }
 SourceFile: "SynTest.java"
+
+
+
+
+
+13、19行指令分别对应的是 monitorenter 和 monitorexit。这里有一个 monitorenter，却有两个 monitorexit 指令的原因是，JVM 要保证每个 monitorenter 必须有与之对应的 monitorexit，monitorenter 指令被插入到同步代码块的开始位置，而 monitorexit 需要插入到方法正常结束处和异常处两个地方，这样就可以保证抛异常的情况下也能释放锁
+
+**monitorenter**
+执行 monitorenter 的线程尝试获得 monitor 的所有权，会发生以下这三种情况之一：
+
+a. 如果该 monitor 的计数为 0，则线程获得该 monitor 并将其计数设置为 1。然后，该线程就是这个 monitor 的所有者。
+
+b. 如果线程已经拥有了这个 monitor ，则它将重新进入，并且累加计数。
+
+c. 如果其他线程已经拥有了这个 monitor，那个这个线程就会被阻塞，直到这个 monitor 的计数变成为 0，代表这个 monitor 已经被释放了，于是当前这个线程就会再次尝试获取这个 monitor。
+
+**monitorexit**
+monitorexit 的作用是将 monitor 的计数器减 1，直到减为 0 为止。代表这个 monitor 已经被释放了，已经没有任何线程拥有它了，也就代表着解锁，所以，其他正在等待这个 monitor 的线程，此时便可以再次尝试获取这个 monitor 的所有权。
+
+
+
+**同步方法**
+从上面可以看出，同步代码块是使用 monitorenter 和 monitorexit 指令实现的。而对于 synchronized 方法，并不是依靠 monitorenter 和 monitorexit 指令实现的，被 javap 反汇编后可以看到，synchronized 方法和普通方法大部分是一样的，不同在于，这个方法会有一个叫作 ACC_SYNCHRONIZED 的 flag 修饰符，来表明它是同步方法。
+
+
+
+  Last modified 2022年1月3日; size 441 bytes
+  MD5 checksum 7cc342ba40aeed2b78c09f9e3b319a05
+  Compiled from "SyncMethodTest.java"
+public class com.janson.thread.chapter12.SyncMethodTest
+  minor version: 0
+  major version: 55
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #5                          // com/janson/thread/chapter12/SyncMethodTest
+  super_class: #6                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 1
+Constant pool:
+   #1 = Methodref          #6.#14         // java/lang/Object."<init>":()V
+   #2 = Fieldref           #15.#16        // java/lang/System.out:Ljava/io/PrintStream;
+   #3 = String             #17            // sync method
+   #4 = Methodref          #18.#19        // java/io/PrintStream.println:(Ljava/lang/String;)V
+   #5 = Class              #20            // com/janson/thread/chapter12/SyncMethodTest
+   #6 = Class              #21            // java/lang/Object
+   #7 = Utf8               <init>
+   #8 = Utf8               ()V
+   #9 = Utf8               Code
+  #10 = Utf8               LineNumberTable
+  #11 = Utf8               synMethod
+  #12 = Utf8               SourceFile
+  #13 = Utf8               SyncMethodTest.java
+  #14 = NameAndType        #7:#8          // "<init>":()V
+  #15 = Class              #22            // java/lang/System
+  #16 = NameAndType        #23:#24        // out:Ljava/io/PrintStream;
+  #17 = Utf8               sync method
+  #18 = Class              #25            // java/io/PrintStream
+  #19 = NameAndType        #26:#27        // println:(Ljava/lang/String;)V
+  #20 = Utf8               com/janson/thread/chapter12/SyncMethodTest
+  #21 = Utf8               java/lang/Object
+  #22 = Utf8               java/lang/System
+  #23 = Utf8               out
+  #24 = Utf8               Ljava/io/PrintStream;
+  #25 = Utf8               java/io/PrintStream
+  #26 = Utf8               println
+  #27 = Utf8               (Ljava/lang/String;)V
+{
+  public com.janson.thread.chapter12.SyncMethodTest();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 8: 0
+
+  public synchronized void synMethod();
+    descriptor: ()V
+    flags: (0x0021) ACC_PUBLIC, ACC_SYNCHRONIZED
+    Code:
+      stack=2, locals=1, args_size=1
+         0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc           #3                  // String sync method
+         5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         8: return
+      LineNumberTable:
+        line 10: 0
+        line 11: 8
+}
+SourceFile: "SyncMethodTest.java"
+
+可以看出，被 synchronized 修饰的方法会有一个 ACC_SYNCHRONIZED 标志。当某个线程要访问某个方法的时候，会首先检查方法是否有 ACC_SYNCHRONIZED 标志，如果有则需要先获得 monitor 锁，然后才能开始执行方法，方法执行之后再释放 monitor 锁。其他方面， synchronized 方法和刚才的 synchronized 代码块是很类似的，例如这时如果其他线程来请求执行方法，也会因为无法获得 monitor 锁而被阻塞。
