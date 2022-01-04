@@ -743,3 +743,109 @@ tryLock() 的重载方法是 tryLock(long time, TimeUnit unit)，这个方法和
 ### unlock()
 
 最后要介绍的方法是 unlock() 方法，是用于解锁的，u方法比较简单，对于 ReentrantLock 而言，执行 unlock() 的时候，内部会把锁的“被持有计数器”减 1，直到减到 0 就代表当前这把锁已经完全释放了，如果减 1 后计数器不为 0，说明这把锁之前被“重入”了，那么锁并没有真正释放，仅仅是减少了持有的次数。
+
+
+
+# 讲一讲公平锁和非公平锁，为什么要“非公平”？
+
+非公平锁输出
+
+Thread0:  Going to print a job
+Thread0: PrintQueue: Printing a Job during 2 seconds
+Thread1:  Going to print a job
+Thread2:  Going to print a job
+Thread3:  Going to print a job
+Thread4:  Going to print a job
+Thread5:  Going to print a job
+Thread6:  Going to print a job
+Thread7:  Going to print a job
+Thread8:  Going to print a job
+Thread9:  Going to print a job
+Thread0: PrintQueue: Printing a Job during 9 seconds
+Thread0:  The document has been printed
+Thread1: PrintQueue: Printing a Job during 8 seconds
+Thread1: PrintQueue: Printing a Job during 0 seconds
+Thread1:  The document has been printed
+Thread2: PrintQueue: Printing a Job during 3 seconds
+Thread2: PrintQueue: Printing a Job during 2 seconds
+Thread2:  The document has been printed
+Thread3: PrintQueue: Printing a Job during 7 seconds
+Thread3: PrintQueue: Printing a Job during 4 seconds
+Thread3:  The document has been printed
+Thread4: PrintQueue: Printing a Job during 4 seconds
+Thread4: PrintQueue: Printing a Job during 9 seconds
+Thread4:  The document has been printed
+Thread5: PrintQueue: Printing a Job during 7 seconds
+Thread5: PrintQueue: Printing a Job during 3 seconds
+Thread5:  The document has been printed
+Thread6: PrintQueue: Printing a Job during 0 seconds
+Thread6: PrintQueue: Printing a Job during 2 seconds
+Thread6:  The document has been printed
+Thread7: PrintQueue: Printing a Job during 3 seconds
+Thread7: PrintQueue: Printing a Job during 7 seconds
+Thread7:  The document has been printed
+Thread8: PrintQueue: Printing a Job during 7 seconds
+Thread8: PrintQueue: Printing a Job during 7 seconds
+Thread8:  The document has been printed
+Thread9: PrintQueue: Printing a Job during 6 seconds
+Thread9: PrintQueue: Printing a Job during 3 seconds
+Thread9:  The document has been printed
+
+
+
+公平锁输出
+
+Thread0:  Going to print a job
+Thread0: PrintQueue: Printing a Job during 1 seconds
+Thread1:  Going to print a job
+Thread2:  Going to print a job
+Thread3:  Going to print a job
+Thread4:  Going to print a job
+Thread5:  Going to print a job
+Thread6:  Going to print a job
+Thread7:  Going to print a job
+Thread8:  Going to print a job
+Thread9:  Going to print a job
+Thread1: PrintQueue: Printing a Job during 7 seconds
+Thread2: PrintQueue: Printing a Job during 1 seconds
+Thread3: PrintQueue: Printing a Job during 8 seconds
+Thread4: PrintQueue: Printing a Job during 3 seconds
+Thread5: PrintQueue: Printing a Job during 8 seconds
+Thread6: PrintQueue: Printing a Job during 4 seconds
+Thread7: PrintQueue: Printing a Job during 2 seconds
+Thread8: PrintQueue: Printing a Job during 0 seconds
+Thread9: PrintQueue: Printing a Job during 3 seconds
+Thread0: PrintQueue: Printing a Job during 8 seconds
+Thread0:  The document has been printed
+Thread1: PrintQueue: Printing a Job during 5 seconds
+Thread1:  The document has been printed
+Thread2: PrintQueue: Printing a Job during 5 seconds
+Thread2:  The document has been printed
+Thread3: PrintQueue: Printing a Job during 5 seconds
+Thread3:  The document has been printed
+Thread4: PrintQueue: Printing a Job during 3 seconds
+Thread4:  The document has been printed
+Thread5: PrintQueue: Printing a Job during 8 seconds
+Thread5:  The document has been printed
+Thread6: PrintQueue: Printing a Job during 9 seconds
+Thread6:  The document has been printed
+Thread7: PrintQueue: Printing a Job during 0 seconds
+Thread7:  The document has been printed
+Thread8: PrintQueue: Printing a Job during 9 seconds
+Thread8:  The document has been printed
+Thread9: PrintQueue: Printing a Job during 8 seconds
+Thread9:  The document has been printed
+
+
+
+
+
+### 对比公平和非公平的优缺点
+
+我们接下来对比公平和非公平的优缺点，如表格所示
+
+![img](https://s0.lgstatic.com/i/image3/M01/5D/C8/CgpOIF4Jsh6AbVZ-AAB_Y_MH7f4077.png)
+
+综上所述，公平锁就是会按照多个线程申请锁的顺序来获取锁，从而实现公平的特性。非公平锁加锁时不考虑排队等待情况，直接尝试获取锁，所以存在后申请却先获得锁的情况，但由此也提高了整体的效率。
+
+没想到非公平锁的设计初衷是为了提高性能，又get到一个知识点
