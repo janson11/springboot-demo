@@ -1227,3 +1227,44 @@ Java 8 先使用拉链法，在链表长度超过一定阈值时，将链表转
 Java 7 遍历链表的时间复杂度是 O(n)，n 为链表长度。
 
 Java 8 如果变成遍历红黑树，那么时间复杂度降低为 O(log(n))，n 为树的节点个数。
+
+
+## 为什么 Map 桶中超过 8 个才转为红黑树？
+
+事实上，链表长度超过 8 就转为红黑树的设计，更多的是为了防止用户自己实现了不好的哈希算法时导致链表过长，从而导致查询效率低，而此时转为红黑树更多的是一种保底策略，用来保证极端情况下查询的效率。
+
+通常如果 hash 算法正常的话，那么链表的长度也不会很长，那么红黑树也不会带来明显的查询时间上的优势，反而会增加空间负担。所以通常情况下，并没有必要转为红黑树，所以就选择了概率非常小，小于千万分之一概率，也就是长度为 8 的概率，把长度 8 作为转化的默认阈值。
+
+所以如果平时开发中发现 HashMap 或是 ConcurrentHashMap 内部出现了红黑树的结构，这个时候往往就说明我们的哈希算法出了问题，需要留意是不是我们实现了效果不好的 hashCode 方法，并对此进行改进，以便减少冲突。
+
+public class HashMapDemo {
+
+ 
+
+    public static void main(String[] args) {
+
+        HashMap map = new HashMap<HashMapDemo,Integer>(1);
+
+        for (int i = 0; i < 1000; i++) {
+
+            HashMapDemo hashMapDemo1 = new HashMapDemo();
+
+            map.put(hashMapDemo1, null);
+
+        }
+
+        System.out.println("运行结束");
+
+    }
+
+ 
+
+    @Override
+
+    public int hashCode() {
+
+        return 1;
+
+    }
+
+}
