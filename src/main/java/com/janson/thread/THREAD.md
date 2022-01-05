@@ -1448,3 +1448,45 @@ CAS 方法实现线程安全。
 
 
 另外，SynchronousQueue 性能往往优于其他实现，因为它只需要“直接传递”，而不需要存储的过程。如果我们的场景需要直接传递的话，可以优先考虑 SynchronousQueue。
+
+
+## 原子类是如何利用 CAS 保证线程安全的？
+在编程领域里，原子性意味着“一组操作要么全都操作成功，要么全都失败，不能只操作成功其中的一部分”
+
+原子类的作用和锁有类似之处，是为了保证并发情况下线程安全。不过原子类相比于锁，有一定的优势：
+
+粒度更细：原子变量可以把竞争范围缩小到变量级别，通常情况下，锁的粒度都要大于原子变量的粒度。
+
+效率更高：除了高度竞争的情况之外，使用原子类的效率通常会比使用同步互斥锁的效率更高，因为原子类底层利用了 CAS 操作，不会阻塞线程。
+
+| 类型  | 具体类  |
+|---|---|
+|  Atomic* 基本类型原子类	 | AtomicInteger、AtomicLong、AtomicBoolean |
+|  Atomic*Array 数组类型原子类	 | AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray |
+|  Atomic*Reference 引用类型原子类		 | AtomicReference、AtomicStampedReference、AtomicMarkableReference |
+|  Atomic*FieldUpdater 升级类型原子类	 | AtomicIntegerfieldupdater、AtomicLongFieldUpdater、AtomicReferenceFieldUpdater |
+|  Adder 累加器		 | LongAdder、DoubleAdder |
+|  Accumulator 积累器		 | LongAccumulator、DoubleAccumulator |
+
+AtomicInteger 类常用方法
+AtomicInteger 类有以下几个常用的方法：
+
+public final int get() //获取当前的值
+
+因为它本身是一个 Java 类，而不再是一个基本类型，所以要想获取值还是需要一些方法，比如通过 get 方法就可以获取到当前的值。
+
+public final int getAndSet(int newValue) //获取当前的值，并设置新的值
+
+接下来的几个方法和它平时的操作相关：
+
+public final int getAndIncrement() //获取当前的值，并自增
+
+public final int getAndDecrement() //获取当前的值，并自减
+
+public final int getAndAdd(int delta) //获取当前的值，并加上预期的值
+	
+	
+
+	
+
+
