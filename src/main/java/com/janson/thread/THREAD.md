@@ -587,6 +587,38 @@ SourceFile: "SyncMethodTest.java"
 可以看出，被 synchronized 修饰的方法会有一个 ACC_SYNCHRONIZED 标志。当某个线程要访问某个方法的时候，会首先检查方法是否有 ACC_SYNCHRONIZED 标志，如果有则需要先获得 monitor 锁，然后才能开始执行方法，方法执行之后再释放 monitor 锁。其他方面， synchronized 方法和刚才的 synchronized 代码块是很类似的，例如这时如果其他线程来请求执行方法，也会因为无法获得 monitor 锁而被阻塞。
 
 
+**如何看到 synchronized 背后的“monitor 锁”？**
+
+
+我们都知道，最简单的同步方式就是利用 synchronized 关键字来修饰代码块或者修饰一个方法，那么这部分被保护的代码，在同一时刻就最多只有一个线程可以运行，而 synchronized 的背后正是利用 monitor 锁实现的。所以首先我们来看下获取和释放 monitor 锁的时机，每个 Java 对象都可以用作一个实现同步的锁，这个锁也被称为内置锁或 monitor 锁，获得 monitor 锁的唯一途径就是进入由这个锁保护的同步代码块或同步方法，线程在进入被 synchronized 保护的代码块之前，会自动获取锁，并且无论是正常路径退出，还是通过抛出异常退出，在退出的时候都会自动释放锁。
+
+我们首先来看一个 synchronized 修饰方法的代码的例子：
+
+复制代码
+public synchronized void method() {
+    method body
+}
+我们看到 method() 方法是被 synchronized 修饰的，为了方便理解其背后的原理，我们把上面这段代码改写为下面这种等价形式的伪代码。
+
+复制代码
+public void method() {
+    this.intrinsicLock.lock();
+    try{
+        method body
+    }
+    finally {
+        this.intrinsicLock.unlock();
+    }
+}
+在这种写法中，进入 method 方法后，立刻添加内置锁，并且用 try 代码块把方法保护起来，最后用 finally 释放这把锁，这里的 intrinsicLock 就是 monitor 锁。经过这样的伪代码展开之后，相信你对 synchronized 的理解就更加清晰了。
+
+用 javap 命令查看反汇编的结果
+JVM 实现 synchronized 方法和 synchronized 代码块的细节是不一样的，下面我们就分别来看一下两者的实现。
+
+javac SynTest.java          
+javap -verbose SynTest.class 
+
+
 
 happens-before原则定义如下：
 
@@ -1134,33 +1166,64 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 通过以上的源码分析，我们对于 putVal 方法有了详细的认识，可以看出，方法中会逐步根据当前槽点是未初始化、空、扩容、链表、红黑树等不同情况做出不同的处理。
 
 
-**如何看到 synchronized 背后的“monitor 锁”？**
-
-
-我们都知道，最简单的同步方式就是利用 synchronized 关键字来修饰代码块或者修饰一个方法，那么这部分被保护的代码，在同一时刻就最多只有一个线程可以运行，而 synchronized 的背后正是利用 monitor 锁实现的。所以首先我们来看下获取和释放 monitor 锁的时机，每个 Java 对象都可以用作一个实现同步的锁，这个锁也被称为内置锁或 monitor 锁，获得 monitor 锁的唯一途径就是进入由这个锁保护的同步代码块或同步方法，线程在进入被 synchronized 保护的代码块之前，会自动获取锁，并且无论是正常路径退出，还是通过抛出异常退出，在退出的时候都会自动释放锁。
-
-我们首先来看一个 synchronized 修饰方法的代码的例子：
+get 方法源码分析
+get 方法比较简单，我们同样用源码注释的方式来分析一下：
 
 复制代码
-public synchronized void method() {
-    method body
-}
-我们看到 method() 方法是被 synchronized 修饰的，为了方便理解其背后的原理，我们把上面这段代码改写为下面这种等价形式的伪代码。
-
-复制代码
-public void method() {
-    this.intrinsicLock.lock();
-    try{
-        method body
+public V get(Object key) {
+    Node<K,V>[] tab; Node<K,V> e, p; int n, eh; K ek;
+    //计算 hash 值
+    int h = spread(key.hashCode());
+    //如果整个数组是空的，或者当前槽点的数据是空的，说明 key 对应的 value 不存在，直接返回 null
+    if ((tab = table) != null && (n = tab.length) > 0 &&
+            (e = tabAt(tab, (n - 1) & h)) != null) {
+        //判断头结点是否就是我们需要的节点，如果是则直接返回
+        if ((eh = e.hash) == h) {
+            if ((ek = e.key) == key || (ek != null && key.equals(ek)))
+                return e.val;
+        }
+        //如果头结点 hash 值小于 0，说明是红黑树或者正在扩容，就用对应的 find 方法来查找
+        else if (eh < 0)
+            return (p = e.find(h, key)) != null ? p.val : null;
+        //遍历链表来查找
+        while ((e = e.next) != null) {
+            if (e.hash == h &&
+                    ((ek = e.key) == key || (ek != null && key.equals(ek))))
+                return e.val;
+        }
     }
-    finally {
-        this.intrinsicLock.unlock();
-    }
+    return null;
 }
-在这种写法中，进入 method 方法后，立刻添加内置锁，并且用 try 代码块把方法保护起来，最后用 finally 释放这把锁，这里的 intrinsicLock 就是 monitor 锁。经过这样的伪代码展开之后，相信你对 synchronized 的理解就更加清晰了。
+总结一下 get 的过程：
 
-用 javap 命令查看反汇编的结果
-JVM 实现 synchronized 方法和 synchronized 代码块的细节是不一样的，下面我们就分别来看一下两者的实现。
+计算 Hash 值，并由此值找到对应的槽点；
+如果数组是空的或者该位置为 null，那么直接返回 null 就可以了；
+如果该位置处的节点刚好就是我们需要的，直接返回该节点的值；
+如果该位置节点是红黑树或者正在扩容，就用 find 方法继续查找；
+否则那就是链表，就进行遍历链表查找。
 
-javac SynTest.java          
-javap -verbose SynTest.class 
+
+## 对比Java7 和Java8 的异同和优缺点
+
+1、数据结构
+Java 7 采用 Segment 分段锁来实现，而 Java 8 中的 ConcurrentHashMap 使用数组 + 链表 + 红黑树，在这一点上它们的差别非常大。
+
+2、并发度
+Java 7 中，每个 Segment 独立加锁，最大并发个数就是 Segment 的个数，默认是 16。
+
+但是到了 Java 8 中，锁粒度更细，理想情况下 table 数组元素的个数（也就是数组长度）就是其支持并发的最大个数，并发度比之前有提高。
+
+3、保证并发安全的原理
+Java 7 采用 Segment 分段锁来保证安全，而 Segment 是继承自 ReentrantLock。
+
+4、Java 8 中放弃了 Segment 的设计，采用 Node + CAS + synchronized 保证线程安全。
+
+5、遇到 Hash 碰撞
+Java 7 在 Hash 冲突时，会使用拉链法，也就是链表的形式。
+
+Java 8 先使用拉链法，在链表长度超过一定阈值时，将链表转换为红黑树，来提高查找效率。
+
+6、查询时间复杂度
+Java 7 遍历链表的时间复杂度是 O(n)，n 为链表长度。
+
+Java 8 如果变成遍历红黑树，那么时间复杂度降低为 O(log(n))，n 为树的节点个数。
