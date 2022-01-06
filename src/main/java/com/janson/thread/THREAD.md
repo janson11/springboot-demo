@@ -1487,6 +1487,63 @@ public final int getAndAdd(int delta) //获取当前的值，并加上预期的�
 	
 	
 
-	
+​	
 
+getAndAdd方法
+这个方法的代码在 Java 1.8 中的实现如下：
 
+复制代码
+//JDK 1.8实现
+public final int getAndAdd(int delta) {
+   return unsafe.getAndAddInt(this, valueOffset, delta);
+}
+可以看出，里面使用了 Unsafe 这个类，并且调用了 unsafe.getAndAddInt 方法。所以这里需要简要介绍一下 Unsafe 类。
+
+Unsafe 类
+Unsafe 类主要是用于和操作系统打交道的，因为大部分的 Java 代码自身无法直接操作内存，所以在必要的时候，可以利用 Unsafe 类来和操作系统进行交互，CAS 正是利用到了 Unsafe 类。
+
+那么我们就来看一下 AtomicInteger 的一些重要代码，如下所示：
+public class AtomicInteger extends Number implements java.io.Serializable {
+   // setup to use Unsafe.compareAndSwapInt for updates
+   private static final Unsafe unsafe = Unsafe.getUnsafe();
+   private static final long valueOffset;
+
+   static {
+       try {
+           valueOffset = unsafe.objectFieldOffset
+               (AtomicInteger.class.getDeclaredField("value"));
+       } catch (Exception ex) { throw new Error(ex); }
+   }
+
+   private volatile int value;
+   public final int get() {return value;}
+   ...
+}
+可以看出，在数据定义的部分，首先还获取了 Unsafe 实例，并且定义了 valueOffset。我们往下看到 static 代码块，这个代码块会在类加载的时候执行，执行时我们会调用 Unsafe 的 objectFieldOffset 方法，从而得到当前这个原子类的 value 的偏移量，并且赋给 valueOffset 变量，这样一来我们就获取到了 value 的偏移量，它的含义是在内存中的偏移地址，因为 Unsafe 就是根据内存偏移地址获取数据的原值的，这样我们就能通过 Unsafe 来实现 CAS 了。
+
+value 是用 volatile 修饰的，它就是我们原子类存储的值的变量，由于它被 volatile 修饰，我们就可以保证在多线程之间看到的 value 是同一份，保证了可见性。
+
+接下来继续看 Unsafe 的 getAndAddInt 方法的实现，代码如下：
+
+```
+/**
+ * Atomically adds the given value to the current value of a field
+ * or array element within the given object <code>o</code>
+ * at the given <code>offset</code>.
+ *
+ * @param o object/array to update the field/element in
+ * @param offset field/element offset
+ * @param delta the value to add
+ * @return the previous value
+ * @since 1.8
+ */
+public final int getAndAddInt(Object o, long offset, int delta) {
+    int v;
+    do {
+        v = getIntVolatile(o, offset);
+    } while (!compareAndSwapInt(o, offset, v, v + delta));
+    return v;
+}
+```
+
+它实现的原理是利用自旋去不停地尝试，直到成功为止。
