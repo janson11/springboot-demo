@@ -1575,3 +1575,35 @@ LongAdder 只提供了 add、increment 等简单的方法，适合的是统计�
 “老师，LongAdder 既然最后在相加的时候可能不准确，那不也是线程不安全的么，为什么还要使用呢？”
 
 https://www.cnblogs.com/thisiswhy/p/13176237.html
+
+
+
+## 原子类和 volatile 有什么异同？
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/9F/CgpOIF49B7qAIJThAAB6qxJtvhs898.png)
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/A0/Cgq2xl49B9GAHIQWAABs3zG_-08605.png)
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/A0/Cgq2xl49B-mAArdMAACJefFgK2k906.png)
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/A0/Cgq2xl49CACANaAbAACTXNZMnjQ802.png)
+
+之所以加了关键字之后就就可以让它拥有可见性，原因在于有了这个关键字之后，线程 1 的更改会被 flush 到共享内存中，然后又会被 refresh 到线程 2 的本地内存中，这样线程 2 就能感受到这个变化了，所以 volatile 这个关键字最主要是用来解决可见性问题的，可以一定程度上保证线程安全。
+
+原子类和 volatile 的使用场景
+
+
+
+那下面我们就来说一下原子类和 volatile 各自的使用场景。
+
+
+
+我们可以看出，volatile 和原子类的使用场景是不一样的，**如果我们有一个可见性问题，那么可以使用 volatile 关键字**，但如果我们的问题是一个组合操作，需要用同步来解决原子性问题的话，那么可以使用原子变量，而不能使用 volatile 关键字。
+
+
+
+通常情况下，volatile 可以用来修饰 boolean 类型的标记位，因为对于标记位来讲，直接的赋值操作本身就是具备原子性的，再加上 volatile 保证了可见性，那么就是线程安全的了。
+
+
+
+而对于会被多个线程同时操作的计数器 Counter 的场景，这种场景的一个典型特点就是，它不仅仅是一个简单的赋值操作，而是需要先读取当前的值，然后在此基础上进行一定的修改，再把它给赋值回去。这样一来，我们的 volatile 就不足以保证这种情况的线程安全了。我们需要使用原子类来保证线程安全。
