@@ -1674,3 +1674,11 @@ synchronized 主要用于临界资源的分配，在同一时刻限制最多只�
 相比于 ThreadLocal 而言，synchronized 的效率会更低一些，但是花费的内存也更少。在这种场景下，ThreadLocal 和 synchronized 虽然有不同的效果，不过都可以达到线程安全的目的。
 
 但是对于 ThreadLocal 而言，它还有不同的使用场景。比如当 ThreadLocal 用于让多个类能更方便地拿到我们希望给每个线程独立保存这个信息的场景下时（比如每个线程都会对应一个用户信息，也就是 user 对象），在这种场景下，ThreadLocal 侧重的是避免传参，所以此时 ThreadLocal 和 synchronized 是两个不同维度的工具。
+
+
+
+## 多个 ThreadLocal 在 Thread 中的 threadlocals 里是怎么存储的？
+
+Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系
+
+![img](https://s0.lgstatic.com/i/image3/M01/67/E8/Cgq2xl5M5a6ADeCKAABC52ZxZCk238.png)
