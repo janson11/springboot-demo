@@ -1682,3 +1682,89 @@ synchronized 主要用于临界资源的分配，在同一时刻限制最多只�
 Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系
 
 ![img](https://s0.lgstatic.com/i/image3/M01/67/E8/Cgq2xl5M5a6ADeCKAABC52ZxZCk238.png)
+
+
+
+
+
+## 内存泄漏——为何每次用完 ThreadLocal 都要调用 remove()？
+
+什么是内存泄漏
+内存泄漏指的是，当某一个对象不再有用的时候，占用的内存却不能被回收，这就叫作内存泄漏。
+
+因为通常情况下，如果一个对象不再有用，那么我们的垃圾回收器 GC，就应该把这部分内存给清理掉。这样的话，就可以让这部分内存后续重新分配到其他的地方去使用；否则，如果对象没有用，但一直不能被回收，这样的垃圾对象如果积累的越来越多，则会导致我们可用的内存越来越少，最后发生内存不够用的 OOM 错误。
+
+
+
+
+
+GC 在垃圾回收的时候会进行可达性分析，它会发现这个 ThreadLocal 对象依然是可达的，所以对于这个 ThreadLocal 对象不会进行垃圾回收，这样的话就造成了内存泄漏的情况。
+
+JDK 开发者考虑到了这一点，所以 ThreadLocalMap 中的 Entry 继承了 WeakReference 弱引用，代码如下所示：
+
+```
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    /** The value associated with this ThreadLocal. */
+    Object value;
+    Entry(ThreadLocal<?> k, Object v) {
+    super(k);
+    value = v;
+   }
+}
+```
+
+
+可以看到，这个 Entry 是 extends WeakReference。弱引用的特点是，如果这个对象只被弱引用关联，而没有任何强引用关联，那么这个对象就可以被回收，所以弱引用不会阻止 GC。因此，这个弱引用的机制就避免了 ThreadLocal 的内存泄露问题。
+
+这就是为什么 Entry 的 key 要使用弱引用的原因。
+
+
+
+Value 的泄漏
+可是，如果我们继续研究的话会发现，虽然 ThreadLocalMap 的每个 Entry 都是一个对 key 的弱引用，但是这个 Entry 包含了一个对 value 的强引用，还是刚才那段代码：
+
+```
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    /** The value associated with this ThreadLocal. */
+    Object value;
+    Entry(ThreadLocal<?> k, Object v) {
+        super(k);
+        // 可以看到，value = v 这行代码就代表了强引用的发生。
+        value = v;
+    }
+}
+```
+
+#### 如何避免内存泄露
+
+分析完这个问题之后，该如何解决呢？解决方法就是我们本课时的标题：调用 ThreadLocal 的 remove 方法。调用这个方法就可以删除对应的 value 对象，可以避免内存泄漏。
+
+我们来看一下 remove 方法的源码：
+
+```
+public void remove() {
+    ThreadLocalMap m = getMap(Thread.currentThread());
+    if (m != null)
+        m.remove(this);
+}
+```
+
+可以看出，它是先获取到 ThreadLocalMap 这个引用的，并且调用了它的 remove 方法。这里的 remove 方法可以把 key 所对应的 value 给清理掉，这样一来，value 就可以被 GC 回收了。
+
+所以，在使用完了 ThreadLocal 之后，我们应该手动去调用它的 remove 方法，目的是防止内存泄漏的发生。
+
+
+
+## Callable 和 Runnable 的不同？
+
+
+
+### Callable 和 Runnable 的不同之处
+
+最后总结一下 Callable 和 Runnable 的不同之处：
+
+- **方法名**，Callable 规定的执行方法是 call()，而 Runnable 规定的执行方法是 run()；
+- **返回值**，Callable 的任务执行后有返回值，而 Runnable 的任务执行后是没有返回值的；
+- **抛出异常**，call() 方法可抛出异常，而 run() 方法是不能抛出受检查异常的；
+- 和 Callable 配合的有一个 Future 类，通过 Future 可以了解任务执行情况，或者取消任务的执行，还可获取任务执行的结果，这些功能都是 Runnable 做不到的，Callable 的功能要比 Runnable 强大。
+
