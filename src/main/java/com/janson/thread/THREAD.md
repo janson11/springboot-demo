@@ -1515,5 +1515,323 @@ AtomicLongFieldUpdater：原子更新长整形的更新器；
 
 AtomicReferenceFieldUpdater：原子更新引用的更新器。
 	
+​	
+
+getAndAdd方法
+这个方法的代码在 Java 1.8 中的实现如下：
+
+复制代码
+//JDK 1.8实现
+public final int getAndAdd(int delta) {
+   return unsafe.getAndAddInt(this, valueOffset, delta);
+}
+可以看出，里面使用了 Unsafe 这个类，并且调用了 unsafe.getAndAddInt 方法。所以这里需要简要介绍一下 Unsafe 类。
+
+Unsafe 类
+Unsafe 类主要是用于和操作系统打交道的，因为大部分的 Java 代码自身无法直接操作内存，所以在必要的时候，可以利用 Unsafe 类来和操作系统进行交互，CAS 正是利用到了 Unsafe 类。
+
+那么我们就来看一下 AtomicInteger 的一些重要代码，如下所示：
+public class AtomicInteger extends Number implements java.io.Serializable {
+   // setup to use Unsafe.compareAndSwapInt for updates
+   private static final Unsafe unsafe = Unsafe.getUnsafe();
+   private static final long valueOffset;
+
+   static {
+       try {
+           valueOffset = unsafe.objectFieldOffset
+               (AtomicInteger.class.getDeclaredField("value"));
+       } catch (Exception ex) { throw new Error(ex); }
+   }
+
+   private volatile int value;
+   public final int get() {return value;}
+   ...
+}
+可以看出，在数据定义的部分，首先还获取了 Unsafe 实例，并且定义了 valueOffset。我们往下看到 static 代码块，这个代码块会在类加载的时候执行，执行时我们会调用 Unsafe 的 objectFieldOffset 方法，从而得到当前这个原子类的 value 的偏移量，并且赋给 valueOffset 变量，这样一来我们就获取到了 value 的偏移量，它的含义是在内存中的偏移地址，因为 Unsafe 就是根据内存偏移地址获取数据的原值的，这样我们就能通过 Unsafe 来实现 CAS 了。
+
+value 是用 volatile 修饰的，它就是我们原子类存储的值的变量，由于它被 volatile 修饰，我们就可以保证在多线程之间看到的 value 是同一份，保证了可见性。
+
+接下来继续看 Unsafe 的 getAndAddInt 方法的实现，代码如下：
+
+```
+/**
+ * Atomically adds the given value to the current value of a field
+ * or array element within the given object <code>o</code>
+ * at the given <code>offset</code>.
+ *
+ * @param o object/array to update the field/element in
+ * @param offset field/element offset
+ * @param delta the value to add
+ * @return the previous value
+ * @since 1.8
+ */
+public final int getAndAddInt(Object o, long offset, int delta) {
+    int v;
+    do {
+        v = getIntVolatile(o, offset);
+    } while (!compareAndSwapInt(o, offset, v, v + delta));
+    return v;
+}
+```
+
+它实现的原理是利用自旋去不停地尝试，直到成功为止。
 
 
+
+## AtomicInteger 在高并发下性能不好，如何解决？为什么？
+
+代码的运行结果同样是 100，但是运行速度比刚才 AtomicLong 的实现要快。下面我们解释一下，为什么高并发下 LongAdder 比 AtomicLong 效率更高。
+
+因为 LongAdder 引入了分段累加的概念，内部一共有两个参数参与计数：第一个叫作 base，它是一个变量，第二个是 Cell[] ，是一个数组。
+
+
+
+如何选择
+在低竞争的情况下，AtomicLong 和 LongAdder 这两个类具有相似的特征，吞吐量也是相似的，因为竞争不高。但是在竞争激烈的情况下，LongAdder 的预期吞吐量要高得多，经过试验，LongAdder 的吞吐量大约是 AtomicLong 的十倍，不过凡事总要付出代价，LongAdder 在保证高效的同时，也需要消耗更多的空间。
+
+
+
+AtomicLong 可否被 LongAdder 替代？
+那么我们就要考虑了，有了更高效的 LongAdder，那 AtomicLong 可否不使用了呢？是否凡是用到 AtomicLong 的地方，都可以用 LongAdder 替换掉呢？答案是不是的，这需要区分场景。
+
+LongAdder 只提供了 add、increment 等简单的方法，适合的是统计求和计数的场景，场景比较单一，而 AtomicLong 还具有 compareAndSet 等高级方法，可以应对除了加减之外的更复杂的需要 CAS 的场景。
+
+结论：如果我们的场景仅仅是需要用到加和减操作的话，那么可以直接使用更高效的 LongAdder，但如果我们需要利用 CAS 比如 compareAndSet 等操作的话，就需要使用 AtomicLong 来完成。
+
+
+
+“老师，LongAdder 既然最后在相加的时候可能不准确，那不也是线程不安全的么，为什么还要使用呢？”
+
+https://www.cnblogs.com/thisiswhy/p/13176237.html
+
+
+
+## 原子类和 volatile 有什么异同？
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/9F/CgpOIF49B7qAIJThAAB6qxJtvhs898.png)
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/A0/Cgq2xl49B9GAHIQWAABs3zG_-08605.png)
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/A0/Cgq2xl49B-mAArdMAACJefFgK2k906.png)
+
+![img](https://s0.lgstatic.com/i/image3/M01/64/A0/Cgq2xl49CACANaAbAACTXNZMnjQ802.png)
+
+之所以加了关键字之后就就可以让它拥有可见性，原因在于有了这个关键字之后，线程 1 的更改会被 flush 到共享内存中，然后又会被 refresh 到线程 2 的本地内存中，这样线程 2 就能感受到这个变化了，所以 volatile 这个关键字最主要是用来解决可见性问题的，可以一定程度上保证线程安全。
+
+原子类和 volatile 的使用场景
+
+
+
+那下面我们就来说一下原子类和 volatile 各自的使用场景。
+
+
+
+我们可以看出，volatile 和原子类的使用场景是不一样的，**如果我们有一个可见性问题，那么可以使用 volatile 关键字**，但如果我们的问题是一个组合操作，需要用同步来解决原子性问题的话，那么可以使用原子变量，而不能使用 volatile 关键字。
+
+
+
+通常情况下，volatile 可以用来修饰 boolean 类型的标记位，因为对于标记位来讲，直接的赋值操作本身就是具备原子性的，再加上 volatile 保证了可见性，那么就是线程安全的了。
+
+
+
+而对于会被多个线程同时操作的计数器 Counter 的场景，这种场景的一个典型特点就是，它不仅仅是一个简单的赋值操作，而是需要先读取当前的值，然后在此基础上进行一定的修改，再把它给赋值回去。这样一来，我们的 volatile 就不足以保证这种情况的线程安全了。我们需要使用原子类来保证线程安全。
+
+
+
+## Java 8 中 Adder 和 Accumulator 有什么区别？
+
+适用场景
+接下来我们说一下 LongAccumulator 的适用场景。
+
+第一点需要满足的条件，就是需要大量的计算，并且当需要并行计算的时候，我们可以考虑使用 LongAccumulator。
+
+当计算量不大，或者串行计算就可以满足需求的时候，可以使用 for 循环；如果计算量大，需要提高计算的效率时，我们则可以利用线程池，再加上 LongAccumulator 来配合的话，就可以达到并行计算的效果，效率非常高。
+
+第二点需要满足的要求，就是计算的执行顺序并不关键，也就是说它不要求各个计算之间的执行顺序，也就是说线程 1 可能在线程 5 之后执行，也可能在线程 5 之前执行，但是执行的先后并不影响最终的结果。
+
+一些非常典型的满足这个条件的计算，就是类似于加法或者乘法，因为它们是有交换律的。同样，求最大值和最小值对于顺序也是没有要求的，因为最终只会得出所有数字中的最大值或者最小值，无论先提交哪个或后提交哪个，都不会影响到最终的结果。
+
+
+
+## ThreadLocal 适合用在哪些实际生产的场景中
+
+在通常的业务开发中，ThreadLocal 有两种典型的使用场景。
+
+场景1，ThreadLocal 用作保存每个线程独享的对象，为每个线程都创建一个副本，这样每个线程都可以修改自己所拥有的副本, 而不会影响其他线程的副本，确保了线程安全。
+
+场景2，ThreadLocal 用作每个线程内需要独立保存信息，以便供其他方法更方便地获取该信息的场景。每个线程获取到的信息可能都是不一样的，前面执行的方法保存了信息后，后续方法可以通过 ThreadLocal 直接获取到，避免了传参，类似于全局变量的概念。
+
+
+
+典型场景1
+这种场景通常用于保存线程不安全的工具类，典型的需要使用的类就是 SimpleDateFormat。
+
+场景介绍
+在这种情况下，每个 Thread 内都有自己的实例副本，且该副本只能由当前 Thread 访问到并使用，相当于每个线程内部的本地变量，这也是 ThreadLocal 命名的含义。因为每个线程独享副本，而不是公用的，所以不存在多线程间共享的问题。
+
+我们希望达到的效果是，既不浪费过多的内存，同时又想保证线程安全。经过思考得出，可以让每个线程都拥有一个自己的 simpleDateFormat 对象来达到这个目的，这样就能两全其美了
+
+
+
+
+
+总结
+ThreadLocal 的两个典型的使用场景。
+
+场景1，ThreadLocal 用作保存每个线程独享的对象，为每个线程都创建一个副本，每个线程都只能修改自己所拥有的副本, 而不会影响其他线程的副本，这样就让原本在并发情况下，线程不安全的情况变成了线程安全的情况。
+
+场景2，ThreadLocal 用作每个线程内需要独立保存信息的场景，供其他方法更方便得获取该信息，每个线程获取到的信息都可能是不一样的，前面执行的方法设置了信息后，后续方法可以通过 ThreadLocal 直接获取到，避免了传参。
+
+
+
+
+
+## ThreadLocal 是用来解决共享资源的多线程访问的问题吗？
+
+ThreadLocal 解决线程安全问题的时候，相比于使用“锁”而言，换了一个思路，把资源变成了各线程独享的资源，非常巧妙地避免了同步操作。具体而言，它可以在 initialValue 中 new 出自己线程独享的资源，而多个线程之间，它们所访问的对象本身是不共享的，自然就不存在任何并发问题。这是 ThreadLocal 解决并发问题的最主要思路。
+
+
+
+ThreadLocal 和 synchronized 是什么关系
+面试官可能会问：你既然说 ThreadLocal 和 synchronized 它们两个都能解决线程安全问题，那么 ThreadLocal 和 synchronized 是什么关系呢？
+
+我们先说第一种情况。当 ThreadLocal 用于解决线程安全问题的时候，也就是把一个对象给每个线程都生成一份独享的副本的，在这种场景下，ThreadLocal 和 synchronized 都可以理解为是用来保证线程安全的手段。例如，在第 44 讲 SimpleDateFormat 的例子中，我们既使用了 synchronized 来达到目的，也使用了 ThreadLocal 作为实现方案。但是效果和实现原理不同：
+
+ThreadLocal 是通过让每个线程独享自己的副本，避免了资源的竞争。
+synchronized 主要用于临界资源的分配，在同一时刻限制最多只有一个线程能访问该资源。
+相比于 ThreadLocal 而言，synchronized 的效率会更低一些，但是花费的内存也更少。在这种场景下，ThreadLocal 和 synchronized 虽然有不同的效果，不过都可以达到线程安全的目的。
+
+但是对于 ThreadLocal 而言，它还有不同的使用场景。比如当 ThreadLocal 用于让多个类能更方便地拿到我们希望给每个线程独立保存这个信息的场景下时（比如每个线程都会对应一个用户信息，也就是 user 对象），在这种场景下，ThreadLocal 侧重的是避免传参，所以此时 ThreadLocal 和 synchronized 是两个不同维度的工具。
+
+
+
+## 多个 ThreadLocal 在 Thread 中的 threadlocals 里是怎么存储的？
+
+Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系
+
+![img](https://s0.lgstatic.com/i/image3/M01/67/E8/Cgq2xl5M5a6ADeCKAABC52ZxZCk238.png)
+
+
+
+
+
+## 内存泄漏——为何每次用完 ThreadLocal 都要调用 remove()？
+
+什么是内存泄漏
+内存泄漏指的是，当某一个对象不再有用的时候，占用的内存却不能被回收，这就叫作内存泄漏。
+
+因为通常情况下，如果一个对象不再有用，那么我们的垃圾回收器 GC，就应该把这部分内存给清理掉。这样的话，就可以让这部分内存后续重新分配到其他的地方去使用；否则，如果对象没有用，但一直不能被回收，这样的垃圾对象如果积累的越来越多，则会导致我们可用的内存越来越少，最后发生内存不够用的 OOM 错误。
+
+
+
+
+
+GC 在垃圾回收的时候会进行可达性分析，它会发现这个 ThreadLocal 对象依然是可达的，所以对于这个 ThreadLocal 对象不会进行垃圾回收，这样的话就造成了内存泄漏的情况。
+
+JDK 开发者考虑到了这一点，所以 ThreadLocalMap 中的 Entry 继承了 WeakReference 弱引用，代码如下所示：
+
+```
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    /** The value associated with this ThreadLocal. */
+    Object value;
+    Entry(ThreadLocal<?> k, Object v) {
+    super(k);
+    value = v;
+   }
+}
+```
+
+
+可以看到，这个 Entry 是 extends WeakReference。弱引用的特点是，如果这个对象只被弱引用关联，而没有任何强引用关联，那么这个对象就可以被回收，所以弱引用不会阻止 GC。因此，这个弱引用的机制就避免了 ThreadLocal 的内存泄露问题。
+
+这就是为什么 Entry 的 key 要使用弱引用的原因。
+
+
+
+Value 的泄漏
+可是，如果我们继续研究的话会发现，虽然 ThreadLocalMap 的每个 Entry 都是一个对 key 的弱引用，但是这个 Entry 包含了一个对 value 的强引用，还是刚才那段代码：
+
+```
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    /** The value associated with this ThreadLocal. */
+    Object value;
+    Entry(ThreadLocal<?> k, Object v) {
+        super(k);
+        // 可以看到，value = v 这行代码就代表了强引用的发生。
+        value = v;
+    }
+}
+```
+
+#### 如何避免内存泄露
+
+分析完这个问题之后，该如何解决呢？解决方法就是我们本课时的标题：调用 ThreadLocal 的 remove 方法。调用这个方法就可以删除对应的 value 对象，可以避免内存泄漏。
+
+我们来看一下 remove 方法的源码：
+
+```
+public void remove() {
+    ThreadLocalMap m = getMap(Thread.currentThread());
+    if (m != null)
+        m.remove(this);
+}
+```
+
+可以看出，它是先获取到 ThreadLocalMap 这个引用的，并且调用了它的 remove 方法。这里的 remove 方法可以把 key 所对应的 value 给清理掉，这样一来，value 就可以被 GC 回收了。
+
+所以，在使用完了 ThreadLocal 之后，我们应该手动去调用它的 remove 方法，目的是防止内存泄漏的发生。
+
+
+
+## Callable 和 Runnable 的不同？
+
+
+
+### Callable 和 Runnable 的不同之处
+
+最后总结一下 Callable 和 Runnable 的不同之处：
+
+- **方法名**，Callable 规定的执行方法是 call()，而 Runnable 规定的执行方法是 run()；
+- **返回值**，Callable 的任务执行后有返回值，而 Runnable 的任务执行后是没有返回值的；
+- **抛出异常**，call() 方法可抛出异常，而 run() 方法是不能抛出受检查异常的；
+- 和 Callable 配合的有一个 Future 类，通过 Future 可以了解任务执行情况，或者取消任务的执行，还可获取任务执行的结果，这些功能都是 Runnable 做不到的，Callable 的功能要比 Runnable 强大。
+
+
+
+### Future 的作用
+
+Future 最主要的作用是，比如当做一定运算的时候，运算过程可能比较耗时，有时会去查数据库，或是繁重的计算，比如压缩、加密等，在这种情况下，如果我们一直在原地等待方法返回，显然是不明智的，整体程序的运行效率会大大降低。我们可以把运算的过程放到子线程去执行，再通过 Future 去控制子线程执行的计算过程，最后获取到计算结果。这样一来就可以把整个程序的运行效率提高，是一种异步的思想。
+
+
+
+#### cancel 方法：取消任务的执行
+
+传入 true 适用的情况是，明确知道这个任务能够处理中断。
+
+传入 false 适用于什么情况呢？
+
+如果我们明确知道这个线程不能处理中断，那应该传入 false。
+我们不知道这个任务是否支持取消（是否能响应中断），因为在大多数情况下代码是多人协作的，对于这个任务是否支持中断，我们不一定有十足的把握，那么在这种情况下也应该传入 false。
+如果这个任务一旦开始运行，我们就希望它完全的执行完毕。在这种情况下，也应该传入 false。
+
+
+
+
+
+## 使用 Future 有哪些注意点？Future 产生新的线程了吗？
+
+Future 的注意点
+
+1. 当 for 循环批量获取 Future 的结果时容易 block，get 方法调用时应使用 timeout 限制
+
+2. Future 的生命周期不能后退
+
+   Future 的生命周期不能后退，一旦完成了任务，它就永久停在了“已完成”的状态，不能从头再来，也不能让一个已经完成计算的 Future 再次重新执行任务。
+
+
+
+Future 产生新的线程了吗
+
+有一种说法是，除了继承 Thread 类和实现 Runnable 接口之外，还有第三种产生新线程的方式，那就是采用 Callable 和 Future，这叫作有返回值的创建线程的方式。这种说法是不正确的。
+
+其实 Callable 和 Future 本身并不能产生新的线程，它们需要借助其他的比如 Thread 类或者线程池才能执行任务。例如，在把 Callable 提交到线程池后，真正执行 Callable 的其实还是线程池中的线程，而线程池中的线程是由 ThreadFactory 产生的，这里产生的新线程与 Callable、Future 都没有关系，所以 Future 并没有产生新的线程。
