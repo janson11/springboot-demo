@@ -1,9 +1,12 @@
 package com.janson.thread.chapter20;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,12 +16,11 @@ import org.springframework.stereotype.Service;
  */
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Person {
     private String name;
     private Integer age;
 
-    @Override
-    public int hashCode() {
-        return 1;
-    }
 }

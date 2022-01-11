@@ -1486,7 +1486,34 @@ public final int getAndDecrement() //获取当前的值，并自减
 public final int getAndAdd(int delta) //获取当前的值，并加上预期的值
 	
 	
+Array 数组类型原子类
+下面我们来看第二大类 Atomic*Array 数组类型原子类，数组里的元素，都可以保证其原子性，比如 AtomicIntegerArray 相当于把 AtomicInteger 聚合起来，组合成一个数组。这样一来，我们如果想用一个每一个元素都具备原子性的数组的话， 就可以使用 Atomic*Array。
 
+它一共分为 3 种，分别是：
+
+AtomicIntegerArray：整形数组原子类；
+
+AtomicLongArray：长整形数组原子类；
+
+AtomicReferenceArray ：引用类型数组原子类。
+
+Atomic\Reference 引用类型原子类
+下面我们介绍第三种 AtomicReference 引用类型原子类。AtomicReference 类的作用和AtomicInteger 并没有本质区别， AtomicInteger 可以让一个整数保证原子性，而AtomicReference 可以让一个对象保证原子性。这样一来，AtomicReference 的能力明显比 AtomicInteger 强，因为一个对象里可以包含很多属性。
+
+在这个类别之下，除了 AtomicReference 之外，还有：
+
+AtomicStampedReference：它是对 AtomicReference 的升级，在此基础上还加了时间戳，用于解决 CAS 的 ABA 问题。
+
+AtomicMarkableReference：和 AtomicReference 类似，多了一个绑定的布尔值，可以用于表示该对象已删除等场景。
+
+Atomic\FieldUpdater 原子更新器
+第四类我们将要介绍的是 Atomic\FieldUpdater，我们把它称为原子更新器，一共有三种，分别是。
+
+AtomicIntegerFieldUpdater：原子更新整形的更新器；
+
+AtomicLongFieldUpdater：原子更新长整形的更新器；
+
+AtomicReferenceFieldUpdater：原子更新引用的更新器。
 	
 
 
