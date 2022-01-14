@@ -2146,3 +2146,9 @@ Future：Future 有一个 get 方法，可以用来获取任务的结果。那�
 
 线程池：要想利用线程池，就需要往里面提交任务（Runnable 或者 Callable），这里面也有一个 happens-before 关系的规则，那就是提交任务的操作 happens-before 任务的执行。
 
+
+
+## volatile 的作用是什么？与 synchronized 有什么异同？
+
+volatile 的适用场合
+不适用：a++
