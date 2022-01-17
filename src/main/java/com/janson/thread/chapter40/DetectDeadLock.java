@@ -1,17 +1,13 @@
 package com.janson.thread.chapter40;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
-
 /**
- * @Description: 必定死锁的情况
+ * @Description:
  * @Author: Janson
- * @Date: 2022/1/17 0:20
+ * @Date: 2022/1/17 11:38
  **/
-public class MustDeadLockDemo implements Runnable {
+public class DetectDeadLock implements Runnable {
 
-    public int flag;
+    private int flag;
     static Object o1 = new Object();
     static Object o2 = new Object();
 
@@ -46,7 +42,7 @@ public class MustDeadLockDemo implements Runnable {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         MustDeadLockDemo mustDeadLockDemo1 = new MustDeadLockDemo();
         MustDeadLockDemo mustDeadLockDemo2 = new MustDeadLockDemo();
         mustDeadLockDemo1.flag = 1;
@@ -55,14 +51,6 @@ public class MustDeadLockDemo implements Runnable {
         Thread thread2 = new Thread(mustDeadLockDemo2, "t2");
         thread1.start();
         thread2.start();
-        Thread.sleep(1000);
-        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-        long[] deadlockedThreads = threadMXBean.findDeadlockedThreads();
-        if (deadlockedThreads != null && deadlockedThreads.length > 0) {
-            for (int i = 0; i < deadlockedThreads.length; i++) {
-                ThreadInfo threadInfo = threadMXBean.getThreadInfo(deadlockedThreads[i]);
-                System.out.println("线程id为" + threadInfo.getThreadId() + "，线程名为" + threadInfo.getThreadName() + "的线程已经发生死锁，需要的锁正被线程" + threadInfo.getLockOwnerName() + "持有");
-            }
-        }
     }
+
 }
