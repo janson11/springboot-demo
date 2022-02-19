@@ -3,6 +3,7 @@ package com.janson.algorithm.chapter2;
 
 import com.janson.algorithm.chapter1.ChapterDemo1;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,12 +97,27 @@ public class ChapterDemo2 {
 
     }
 
+    public static void s4() {
+        int a[] = {1, 2, 3, 4, 5};
+
+        for (int i = 0; i < a.length; i++) {
+            int temp;
+            if (i < a.length / 2) {
+                temp = a[i];
+                a[i] = a[a.length - i - 1];
+                a[a.length - i - 1] = temp;
+            }
+        }
+        System.out.println(Arrays.toString(a));
+    }
+
     public static void main(String[] args) {
 //        s1();
-        s2();
-        s2_1();
+//        s2();
+//        s2_1();
 //        s3();
 
+        s4();
     }
 
 
