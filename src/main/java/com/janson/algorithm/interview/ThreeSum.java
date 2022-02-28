@@ -18,16 +18,16 @@ public class ThreeSum {
         List<List<Integer>> result = new LinkedList<List<Integer>>();
         if (nums.length >= 3) {
             Arrays.sort(nums);
-        }
-        int i = 0;
-        while (i < nums.length - 2) {
-            twoSum(nums, i, result);
-            int temp = nums[i];
-            while (i < nums.length && nums[i] == temp) {
-                ++i;
+
+            int i = 0;
+            while (i < nums.length - 2) {
+                twoSum(nums, i, result);
+                int temp = nums[i];
+                while (i < nums.length && nums[i] == temp) {
+                    ++i;
+                }
             }
         }
-
         return result;
     }
 
@@ -51,7 +51,7 @@ public class ThreeSum {
 
 
     public static void main(String[] args) {
-        int[] nums = new int[]{-1, 0, 12, -1, -4};
+        int[] nums = new int[]{-1, 0, 1, 2, -1, -4};
         System.out.println(threeSum(nums).toString());
     }
 }
