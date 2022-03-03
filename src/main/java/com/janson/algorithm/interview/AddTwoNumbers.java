@@ -14,6 +14,8 @@ public class AddTwoNumbers {
     public ListNode addTwoNumbers(ListNode head1, ListNode head2) {
         head1 = ListNode.reverseList(head1);
         head2 = ListNode.reverseList(head2);
+        ListNode reversedHead = addReversed(head1, head2);
+        return ListNode.reverseList(reversedHead);
 
 
     }
