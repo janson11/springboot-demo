@@ -110,5 +110,20 @@ public class ListNode {
         return dummy.next;
     }
 
+    public static ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        //变量cur指向当前遍历到的节点，变量prev指向当前节点的前一个节点，而变量next指向下一个节点。
+        // 每遍历一个节点之后，都让变量prev指向该节点。在遍历到尾节点之后，变量prev最后一次被更新，因此，变量prev最终指向原始链表的尾节点，也就是反转链表的头节点。
+        //显然，上述代码的时间复杂度是O（n），空间复杂度是O（1）。
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
 
 }
