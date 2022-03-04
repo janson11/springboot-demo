@@ -34,6 +34,53 @@ public class IsPalindrome {
         return true;
     }
 
+
+    /**
+     * 问题：如何判断一个链表是不是回文？要求解法的时间复杂度是O（n），并且不得使用超过O（1）的辅助空间。
+     * 如果一个链表是回文，那么链表的节点序列从前往后看和从后往前看是相同的。例如，图4.13中的链表的节点序列从前往后看和从后往前看都是1、2、3、3、2、1，因此这是一个回文链表。
+     * <p>
+     * <p>
+     * 分析：如果不考虑辅助空间的限制，直观的解法是创建一个新的链表，链表中节点的顺序和输入链表的节点顺序正好相反。如果新的链表和输入链表是相同的，那么输入链表就是一个回文链表。只是这种解法需要创建一个和输入链表长度相等的链表，因此需要O（n）的辅助空间。
+     * 仔细分析回文链表的特点以便找出更好的解法。回文链表的一个特性是对称性，也就是说，如果把链表分为前后两半，那么前半段链表反转之后与后半段链表是相同的。在如图4.13所示的包含6个节点的链表中，前半段链表的3个节点反转之后分别是3、2、1，后半段链表的3个节点也分别是3、2、1，因此它是一个回文链表。
+     * <p>
+     * 1——>2——>3——>3——>2——>1
+     *
+     * @param head
+     * @return
+     */
+    public boolean listNodeIsPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return false;
+        }
+
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        ListNode secondHalf = slow.next;
+        if (fast.next != null) {
+            secondHalf = slow.next.next;
+        }
+        slow.next = null;
+
+
+        return equals(secondHalf, ListNode.reverseList(head));
+    }
+
+    private boolean equals(ListNode head1, ListNode head2) {
+        while (head1 != null && head2 != null) {
+            if (head1.val != head2.val) {
+                return false;
+            }
+            head1 = head1.next;
+            head2 = head2.next;
+        }
+        return head1 == null && head2 == null;
+    }
+
     public static void main(String[] args) {
         String s = "Was it a cat I saw";
         String s1 = "race a car";
