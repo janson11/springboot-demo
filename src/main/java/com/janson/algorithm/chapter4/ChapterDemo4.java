@@ -20,22 +20,52 @@ public class ChapterDemo4 {
 
 
     public static ListNode reverseKGroup(ListNode head, int k) {
-        ListNode end = head;
-        for (int i = 0; i < k; i++) {//找到翻转部分尾节点的下一个节点
-            if (end == null) {
+        // nextHead指向链表中除去k个节点之后的头节点
+        // 初始指向节点head
+        ListNode nextHead = head;
+        // 链表中剩余节点个数
+        int remainNum = 0;
+
+        while (remainNum < k) {
+            // 根据题意，如果链表剩余节点个数不足k个
+            // 则不需要反转，因此直接返回head
+            if (nextHead == null) {
                 return head;
             }
-            end = end.next;
+            remainNum++;
+            nextHead = nextHead.next;
         }
-        ListNode pre = null, cur = head;
-        while (cur != end) {
-            ListNode tmp = cur.next;
-            cur.next = pre;
-            pre = cur;
-            cur = tmp;
+
+        // 递归反转链表中除去前k个节点的后续节点
+        ListNode subList = reverseKGroup(nextHead, k);
+        // 反转链表中前k个节点的后续节点
+        ListNode newHead = reverseTopN(head, k);
+        // 前k个节点反转后，head指向的节点是反转后的链表中的最后一个节点
+        // 因此head指向的节点的后继指针指向subList
+        head.next=subList;
+        return newHead;
+
+
+    }
+
+    private static ListNode reverseTopN(ListNode head, int n) {
+        ListNode prev = null;
+        // 当前考察的节点
+        ListNode cur = head;
+        // num小于n,则表示当前节点需要反转
+        for (int num = 0; num < n; num++) {
+            // 当前节点的下一个节点
+            ListNode next = cur.next;
+            // 当前节点的后续指针指向prev
+            cur.next = prev;
+            // prev指向当前节点
+            // 表示其是next节点反转后的前一个节点
+            prev = cur;
+            // cur指向下一个节点
+            // 表示下一个节点的待反转节点
+            cur = next;
         }
-        head.next = reverseKGroup(end, k);//尾节点指向下一个翻转的头节点
-        return pre;
+        return prev;
     }
 
 
