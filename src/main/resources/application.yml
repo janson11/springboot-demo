@@ -19,6 +19,3 @@ server:
       enabled: true
       max-days: 1
       directory: /tmp
-logging:
-  level:
-    org.apache.skywalking.oap.server.storage.plugin.elasticsearch7.client.ElasticSearch7Client: debug
