@@ -1,4 +1,4 @@
-package com.janson.rocketmq;
+package com.janson.rocketmq.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
