@@ -23,7 +23,7 @@ public class FixedSizeThreadPool0 {
      */
     List<Worker> workers;
 
-    private boolean working=true;
+    private volatile boolean working=true;
 
     public FixedSizeThreadPool0(int poolSize,int queueSize) {
         taskQueue = new LinkedBlockingQueue<>(queueSize);
@@ -56,6 +56,10 @@ public class FixedSizeThreadPool0 {
         for (Worker t : workers) {
             Thread.State state = t.getState();
             if (state ==Thread.State.BLOCKED || state ==Thread.State.WAITING || state == Thread.State.TIMED_WAITING) {
+                // 怎么停止线程
+                // 中断线程的阻塞、等待状态， 他会给线程的一个被中断的标识
+                t.interrupt();
+
 
             }
         }
