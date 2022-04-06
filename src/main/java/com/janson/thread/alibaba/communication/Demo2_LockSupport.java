@@ -12,6 +12,12 @@ public class Demo2_LockSupport {
     static int i =0;
     static Thread t1,t2;
 
+    /**
+     * park 消费信号量，本质上是一个许可的信号量，不累加
+     * unpark 放入信号量
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         t1 = new Thread( () ->{
             while (i<10) {
