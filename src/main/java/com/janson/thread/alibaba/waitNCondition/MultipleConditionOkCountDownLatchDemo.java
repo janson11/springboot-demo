@@ -1,7 +1,5 @@
 package com.janson.thread.alibaba.waitNCondition;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
