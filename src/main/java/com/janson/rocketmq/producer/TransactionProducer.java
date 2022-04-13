@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2022/4/12 5:35 下午
  */
 public class TransactionProducer {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, MQClientException {
 
         TransactionListener transactionListener = new TransactionListenerImpl();
         TransactionMQProducer producer = new TransactionMQProducer("TRANSACTION_PRODUCER_GROUP");
@@ -37,6 +37,7 @@ public class TransactionProducer {
 
         producer.setExecutorService(executorService);
         producer.setTransactionListener(transactionListener);
+        producer.start();
         String[] tags = new String[]{"TagA", "TagB", "TagC"};
         for (int i = 0; i < 10; i++) {
             try {
