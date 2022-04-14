@@ -10,6 +10,8 @@ package com.janson.thread.alibaba.volat;
  */
 public class Singleton {
 
+    // 线程可见性
+    // 防止指令重排序
     private static volatile Singleton instance;
 
     private Singleton() {
