@@ -18,14 +18,12 @@ public class VisibilityDemo {
             @Override
             public void run() {
                 int i = 0;
-                synchronized (this) {
-                    while (VisibilityDemo.is) {
+                while (VisibilityDemo.is) {
 //                    synchronized (this) { //142420387     205235741
 //                        i++;
 //                    }
-                        i++;
+                    i++;
 //                    System.out.println("while i " + i);
-                    }
                 }
                 System.out.println(i);
             }
