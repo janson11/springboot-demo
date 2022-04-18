@@ -1,0 +1,29 @@
+package com.janson.thread.alibaba.distribute.lock.sample;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * @Description:
+ * @Author: shanjian
+ * @Date: 2022/4/18 11:01 上午
+ */
+public class OrderServiceImplWithLock implements OrderService {
+
+    private static OrderCodeGenerator ocg = new OrderCodeGenerator();
+
+    private static Lock lock = new ReentrantLock();
+
+    @Override
+    public void createOrder() {
+        // 获取订单号
+        String orderCode = null;
+        lock.lock();
+        try {
+            orderCode = ocg.getOrderCode();
+        } finally {
+            lock.unlock();
+        }
+        System.out.println(Thread.currentThread().getName() + "===============>" + orderCode);
+    }
+}
