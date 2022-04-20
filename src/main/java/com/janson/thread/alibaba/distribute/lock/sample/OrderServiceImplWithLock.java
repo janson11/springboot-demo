@@ -1,5 +1,7 @@
 package com.janson.thread.alibaba.distribute.lock.sample;
 
+import com.janson.thread.alibaba.distribute.lock.zk.ZkDistributeImproveLock;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,7 +21,8 @@ public class OrderServiceImplWithLock implements OrderService {
         // 获取订单号
         String orderCode = null;
         // 分布式锁
-        Lock lock = new ZkDistributeLock("/dh666888");
+//        Lock lock = new ZkDistributeLock("/dh666888");
+        Lock lock = new ZkDistributeImproveLock("/dh66688877700");
 
         lock.lock();
         try {

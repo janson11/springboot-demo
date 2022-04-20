@@ -15,7 +15,7 @@ public class ConcurrentTestDemo {
 
     public static void main(String[] args) {
         // 并发数
-        int currency = 200;
+        int currency = 20;
         // 循环屏障
         CyclicBarrier cb = new CyclicBarrier(currency);
 //        CountDownLatch cdl = new CountDownLatch(currency);

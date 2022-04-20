@@ -1,31 +1,53 @@
-package com.janson.thread.alibaba.distribute.lock.sample;
+package com.janson.thread.alibaba.distribute.lock.zk;
 
+import com.janson.thread.alibaba.distribute.lock.sample.MyZkSerializer;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNodeExistsException;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 /**
- * @Description: 分布式锁 临时节点，在集群规模大的时候会产生惊群效应
+ * @Description: 分布式锁  临时顺序节点
  * @Author: shanjian
  * @Date: 2022/4/20 9:51 上午
  */
-public class ZkDistributeLock implements Lock {
+public class ZkDistributeImproveLock implements Lock {
+
+    /**
+     * 利用临时顺序节点来实现分布式锁
+     * 获取锁：取排队号（创建自己的临时顺序节点，然后判断自己是否是最小号，如果是，则获取锁。不是，则注册前一节点的watcher，阻塞等待
+     * 释放锁：删除自己的创建的临时顺序节点
+     */
 
     private String lockPath;
 
     private ZkClient zkClient;
 
+    private String currentPath;
+
+    private String beforePath;
+
     private Thread owner;
 
-    public ZkDistributeLock(String lockPath) {
+
+    public ZkDistributeImproveLock(String lockPath) {
         this.lockPath = lockPath;
         zkClient = new ZkClient("localhost:2181");
         zkClient.setZkSerializer(new MyZkSerializer());
+        if (!zkClient.exists(lockPath)) {
+            try {
+                zkClient.createPersistent(lockPath);
+            } catch (ZkNodeExistsException e) {
+
+            }
+        }
+
     }
 
     @Override
@@ -56,10 +78,10 @@ public class ZkDistributeLock implements Lock {
             }
         };
 
-        zkClient.subscribeDataChanges(lockPath, listener);
+        zkClient.subscribeDataChanges(this.beforePath, listener);
 
 
-        if (this.zkClient.exists(lockPath)) {
+        if (this.zkClient.exists(this.beforePath)) {
             // 阻塞自己
             try {
                 cdl.await();
@@ -69,8 +91,8 @@ public class ZkDistributeLock implements Lock {
 
         }
 
-        //取消注册
-        zkClient.unsubscribeDataChanges(lockPath, listener);
+        //取消注册watcher
+        zkClient.unsubscribeDataChanges(this.beforePath, listener);
 
     }
 
@@ -81,14 +103,27 @@ public class ZkDistributeLock implements Lock {
 
     @Override
     public boolean tryLock() {
-        // 抢锁，创建临时节点
-        try {
-            zkClient.createEphemeral(lockPath);
-        } catch (ZkNodeExistsException e) {
-            return false;
+        // 抢锁，创建临时顺序节点
+        if (this.currentPath == null) {
+            currentPath = this.zkClient.createEphemeralSequential(lockPath + "/", "aaa");
         }
-        owner = Thread.currentThread();
-        return true;
+
+        // 获取所有的子顺序节点
+        List<String> children = this.zkClient.getChildren(lockPath);
+        // 排序list
+        Collections.sort(children);
+
+        //判断当前节点是否是最小的
+        if (currentPath.equals(lockPath + "/" + children.get(0))) {
+            return true;
+        } else {
+            //收到前一个
+            // 得到子节的索引号
+            int curIndex = children.indexOf(currentPath.substring(lockPath.length() + 1));
+            beforePath = lockPath + "/" + children.get(curIndex - 1);
+        }
+//        owner = Thread.currentThread();
+        return false;
     }
 
     @Override
@@ -98,14 +133,13 @@ public class ZkDistributeLock implements Lock {
 
     @Override
     public void unlock() {
+//        if (Thread.currentThread() != owner) {
+//            return;
+//        }
+//
+//        owner = null;
         // 必须是持有锁的线程才可以执行unlock逻辑
-
-        if (Thread.currentThread() != owner) {
-            return;
-        }
-
-        owner = null;
-        zkClient.delete(lockPath);
+        zkClient.delete(this.currentPath);
 
     }
 
