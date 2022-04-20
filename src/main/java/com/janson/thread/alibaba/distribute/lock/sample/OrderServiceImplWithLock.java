@@ -12,12 +12,15 @@ public class OrderServiceImplWithLock implements OrderService {
 
     private static OrderCodeGenerator ocg = new OrderCodeGenerator();
 
-    private static Lock lock = new ReentrantLock();
+//    private static Lock lock = new ReentrantLock();
 
     @Override
     public void createOrder() {
         // 获取订单号
         String orderCode = null;
+        // 分布式锁
+        Lock lock = new ZkDistributeLock("/dh666888");
+
         lock.lock();
         try {
             orderCode = ocg.getOrderCode();
