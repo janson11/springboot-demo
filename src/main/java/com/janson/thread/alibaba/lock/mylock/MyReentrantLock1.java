@@ -62,9 +62,20 @@ public class MyReentrantLock1 implements Lock {
     public void lock() {
         if (!tryLock()) {
             // 加入排队对列
-            Node node = addWaiter();
+             Node node = addWaiter();
 
             for (; ; ) {
+                Node pre = node.pre;
+                if (pre ==head) {
+                    if(tryLock()){
+                        head.next = null;
+                        head = node;
+                        node.pre = null;
+                        node.thread = null;
+                        return;
+                    }
+                }
+
                 // 抢不到，阻塞等待
                 LockSupport.park(this);
                 // 被唤醒后，清除中断状态（如有中断状态），否则循环再次进行将park不成功。
