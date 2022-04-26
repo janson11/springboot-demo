@@ -1,17 +1,12 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/user?serverTimezone=GMT%2B8&characterEncoding=utf8
-    username: root
-    password: 123456
-  application:
-    name: mybatis-demo
-
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
 server:
-  port: 8888
+  port: 9990
 
-  ## https://mp.weixin.qq.com/s/f0IQAzSy7uId1L2vppC83w
+spring:
+  application:
+    name: reactive-demo
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/r2dbcs_account
+    username: root
+    password: 12345678
+#  main:
+#    web-application-type: reactive
