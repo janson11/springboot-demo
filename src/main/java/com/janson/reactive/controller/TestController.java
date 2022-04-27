@@ -1,5 +1,7 @@
 package com.janson.reactive.controller;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -96,14 +98,78 @@ public class TestController {
 //        Flux.mergeSequential(Flux.interval(Duration.ofSeconds(0), Duration.ofSeconds(100)).take(2), Flux.interval(Duration.ofSeconds(50), Duration.ofSeconds(100)).take(2)).toStream()
 //                .forEach(System.out::println);
 
-        Flux flux1 =Flux.just(1,2);
-        Flux flux2 =Flux.just(3,4);
-        Flux.zip(flux1,flux2).subscribe(System.out::println);
+        Flux flux1 = Flux.just(1, 2);
+        Flux flux2 = Flux.just(3, 4);
+        Flux.zip(flux1, flux2).subscribe(System.out::println);
 
 
-        Flux.just(1,2).zipWith(Flux.just(3,4)).subscribe(System.out::println);
+        Flux.just(1, 2).zipWith(Flux.just(3, 4)).subscribe(System.out::println);
 
-        Flux.just(1,2).zipWith(Flux.just(3,4),(s1,s2)->String.format("%s+%s=%s",s1,s2,s1+s2)).subscribe(System.out::println);
+        Flux.just(1, 2).zipWith(Flux.just(3, 4), (s1, s2) -> String.format("%s+%s=%s", s1, s2, s1 + s2)).subscribe(System.out::println);
+
+        Flux.range(1, 100).takeUntil(i -> i == 10).subscribe(System.out::println);
+
+        Flux.range(1, 100).takeWhile(i -> i <= 10).subscribe(System.out::println);
+
+        Flux.range(1, 10).bufferUntil(i -> i % 2 == 0).subscribe(System.out::println);
+
+        Flux.range(1, 10).bufferWhile(i -> i % 2 == 0).subscribe(System.out::println);
+
+        Flux.just(3, 5, 7, 9, 11, 15, 16, 17)
+                .any(e -> e % 2 == 0)
+                .subscribe(isExisted -> System.out.println(isExisted));
+
+        Flux.just("abc", "ela", "ade", "paq", "kang")
+                .all(a -> a.contains("a"))
+                .subscribe(isAllContained -> System.out.println(isAllContained));
+
+        Flux.concat(
+                Flux.range(1, 3),
+                Flux.range(4, 2),
+                Flux.range(6, 5)
+        ).subscribe(System.out::println);
+
+        Flux.range(1, 10).reduce((x, y) -> x + y).subscribe(System.out::println);
+        Flux.range(1, 10).reduceWith(() -> 5, (x, y) -> x + y).subscribe(System.out::println);
+
+        Subscriber<String> subScriber = new Subscriber<String>() {
+            volatile Subscription subscription;
+
+            @Override
+            public void onSubscribe(Subscription s) {
+                subscription = s;
+                System.out.println("initialization");
+                subscription.request(1);
+            }
+
+            @Override
+            public void onNext(String s) {
+                System.out.println("onNext:" + s);
+                subscription.request(1);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.printf("OnError:" + t.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("onComplete");
+            }
+        };
+
+        Flux<String> just = Flux.just("12", "23", "34");
+        just.subscribe(subScriber);
+
+        just.subscribe(new MySubscriber<String>());
+
+        Flux.just(1,2).log().subscribe(System.out::println);
+
+        Mono.just(0).map(x ->1/x)
+                .checkpoint("debug").subscribe(System.out::println
+        );
+
 
 
     }
