@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: order-service
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.netflix: WARN
+    org.springframework.web: WARN
+    com.springcss: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

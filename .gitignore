@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+*.mvnw
+*.mvnw.cmd
+*.jar
+#/reactive-spring-css/order-service/mvnw
+#/reactive-spring-css/order-service/mvnw.cmd
+#/reactive-spring-css/mvnw
+#/reactive-spring-css/mvnw.cmd
+
+**/maven-wrapper.properties
