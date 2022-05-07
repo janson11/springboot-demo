@@ -1,9 +1,12 @@
 package com.janson.order.init;
 
 import com.janson.order.domain.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -17,13 +20,13 @@ import java.util.UUID;
 public class InitDatabase {
 
     @Bean
-    CommandLineRunner init(MongoOperations operations) {
+    CommandLineRunner init(@Autowired MongoTemplate mongoTemplate) {
         return args -> {
-            operations.dropCollection(Order.class);
-            operations.insert(new Order("0_" + UUID.randomUUID().toString(), "Order001", "deliveryAddress1", ""));
-            operations.insert(new Order("0_" + UUID.randomUUID().toString(), "Order002", "deliveryAddress2", ""));
+            mongoTemplate.dropCollection(Order.class);
+            mongoTemplate.insert(new Order("0_" + UUID.randomUUID().toString(), "Order001", "deliveryAddress1", ""));
+            mongoTemplate.insert(new Order("0_" + UUID.randomUUID().toString(), "Order002", "deliveryAddress2", ""));
 
-            operations.findAll(Order.class).forEach(
+            mongoTemplate.findAll(Order.class).forEach(
                     order -> System.out.println(order.getId())
             );
         };

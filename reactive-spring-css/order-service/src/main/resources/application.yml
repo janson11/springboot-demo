@@ -1,6 +1,12 @@
 spring:
   application:
     name: order-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: css
+
 
 server:
   port: 8081
@@ -10,6 +16,7 @@ logging:
     com.netflix: WARN
     org.springframework.web: WARN
     com.springcss: INFO
+    org.springframework.data.mongodb.core: debug
 
 management:
   endpoints:
