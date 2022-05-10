@@ -7,6 +7,10 @@ package com.janson.design.decorator;
  */
 public abstract class Beverage {
 
+    public static final int TALL = 0;
+    public static final int GRANDE = 1;
+    public static final int VENTI = 2;
+
     String description = "Unknow Beverage";
 
     public String getDescription() {
@@ -18,4 +22,10 @@ public abstract class Beverage {
      * @return
      */
     public abstract double cost();
+
+
+    public int getSize(){
+        return 0;
+    }
+
 }
