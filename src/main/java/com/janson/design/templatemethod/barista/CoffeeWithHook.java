@@ -1,11 +1,8 @@
 package com.janson.design.templatemethod.barista;
 
-import org.apache.ibatis.logging.stdout.StdOutImpl;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Locale;
 
 /**
  * @Description:
