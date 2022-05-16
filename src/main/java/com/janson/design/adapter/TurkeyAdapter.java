@@ -1,7 +1,7 @@
 package com.janson.design.adapter;
 
 /**
- * @Description: 适配器
+ * @Description: 火鸡转换鸭子的适配器
  * 首先，你需要实现想转换成的类型接口，也就是你的客户所期望看到的接口
  * @Author: shanjian
  * @Date: 2022/5/16 10:54 上午
