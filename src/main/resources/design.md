@@ -71,6 +71,14 @@
 ### 14、代理模式
 为另一个对象提供一个替身或占位符以控制对这个对象的访问。
 
+### 15、符合模式
+结合两个或以上的模式，组成一个解决方案，解决一再发生的一般性问题。
+
+**模式分类：**
+创建型：Singleton、Builder、Prototype、Abstract Factory、Factory Method
+行为型：Template Method、Vistor、Mediator、Iterator、Command、Memento、Interpreter、Observer、Chain of Responsibility、State、Strategy
+结构型：Decorator、Composite、Facade、Proxy、Bridge、Adapter
+
 
 `设计箱内的工具`：
 
