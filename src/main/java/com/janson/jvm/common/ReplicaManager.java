@@ -1,4 +1,4 @@
-package com.janson.jvm;
+package com.janson.jvm.common;
 
 /**
  * @Description:
@@ -9,14 +9,18 @@ public class ReplicaManager {
 
     private long replicaCount;
 
-    public void loadReplicasFromDisk() {
+    public void load(){
+
+    }
+
+    public static void loadReplicasFromDisk() {
         Boolean hasFinishedLoad = false;
         if (isLocalDataCorrupt()) {
 
         }
     }
 
-    public Boolean isLocalDataCorrupt() {
+    public static Boolean isLocalDataCorrupt() {
         Boolean isCorrupt = false;
         return isCorrupt;
     }
