@@ -1,9 +1,9 @@
-package com.janson.rocketmq;
+package com.janson.review;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RocketmqDemoApplicationTests {
+class ReviewApplicationTests {
 
 
 }
