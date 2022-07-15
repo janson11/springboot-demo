@@ -1,4 +1,4 @@
-package com.janson.jvm.demo;
+package com.janson.jvm.gc.young;
 
 /**
  * @Description: JVM JDK 1.8 demo测试

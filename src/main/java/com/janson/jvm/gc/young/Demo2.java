@@ -1,8 +1,8 @@
-package com.janson.jvm.demo;
+package com.janson.jvm.gc.young;
 
 /**
  * @Description: JVM JDK 1.8 demo测试
- * -XX:NewSize=5242880 -XX:MaxNewSize=5242880 -XX:InitialHeapSize=10485760 -XX:MaxHeapSize=10485760 -XX:SurvivorRatio=8 -XX:PretenureSizeThreshold=10485760 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log
+ * -XX:NewSize=10485760 -XX:MaxNewSize=10485760 -XX:InitialHeapSize=20971520 -XX:MaxHeapSize=20971520 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=10485760 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc2.log
  * -XX:NewSize 初始新生代大小 5242880B=5MB
  * -XX:MaxNewSize 最大新生代大小 5242880B=5MB
  * -XX:InitialHeapSize 初始堆大小 10485760 = 10MB
@@ -18,12 +18,14 @@ package com.janson.jvm.demo;
  * @Author: shanjian
  * @Date: 2022/7/12 10:20 上午
  */
-public class Demo1 {
+public class Demo2 {
     public static void main(String[] args) {
-        byte[] array1 = new byte[1024 * 1024];
-        array1 = new byte[1024 * 1024];
-        array1 = new byte[1024 * 1024];
+        byte[] array1 = new byte[2* 1024 * 1024];
+        array1 = new byte[2* 1024 * 1024];
+        array1 = new byte[2* 1024 * 1024];
         array1 = null;
-        byte[] array2 = new byte[2 * 1024 * 1024];
+        byte[] array2 = new byte[128 * 1024];
+        byte[] array3 = new byte[2* 1024 * 1024];
+
     }
 }
