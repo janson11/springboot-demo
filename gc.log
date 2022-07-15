@@ -1,0 +1,16 @@
+Java HotSpot(TM) 64-Bit Server VM (25.291-b10) for bsd-amd64 JRE (1.8.0_291-b10), built on Apr  8 2021 02:17:24 by "java_re" with gcc 4.2.1 Compatible Apple LLVM 11.0.0 (clang-1100.0.33.17)
+Memory: 4k page, physical 16777216k(17684k free)
+
+/proc/meminfo:
+
+CommandLine flags: -XX:InitialHeapSize=10485760 -XX:MaxHeapSize=10485760 -XX:MaxNewSize=5242880 -XX:NewSize=5242880 -XX:OldPLABSize=16 -XX:PretenureSizeThreshold=10485760 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio=8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC 
+0.166: [GC (Allocation Failure) 0.167: [ParNew: 3433K->512K(4608K), 0.0038987 secs] 3433K->1709K(9728K), 0.0044123 secs] [Times: user=0.01 sys=0.01, real=0.01 secs] 
+0.173: [GC (Allocation Failure) 0.173: [ParNew: 2668K->213K(4608K), 0.0054032 secs] 3866K->1920K(9728K), 0.0055148 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+Heap
+ par new generation   total 4608K, used 2331K [0x00000007bf600000, 0x00000007bfb00000, 0x00000007bfb00000)
+  eden space 4096K,  51% used [0x00000007bf600000, 0x00000007bf811870, 0x00000007bfa00000)
+  from space 512K,  41% used [0x00000007bfa00000, 0x00000007bfa35500, 0x00000007bfa80000)
+  to   space 512K,   0% used [0x00000007bfa80000, 0x00000007bfa80000, 0x00000007bfb00000)
+ concurrent mark-sweep generation total 5120K, used 1707K [0x00000007bfb00000, 0x00000007c0000000, 0x00000007c0000000)
+ Metaspace       used 3154K, capacity 4496K, committed 4864K, reserved 1056768K
+  class space    used 345K, capacity 388K, committed 512K, reserved 1048576K
