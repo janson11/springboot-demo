@@ -5,10 +5,9 @@ package com.janson.jvm.gc.example;
  * 然后基于这些数据我们需要为商家提供一些数据报表，比如：每个商家每天有多少访客？有多少交易？付费转化率是多少？当然实际情
  * 况会比这个简单几句话复杂很多，我们这里就简单说个概念而已。
  * 所以此时就需要一套BI系统，所谓BI，英文全称是“Business Intelligence”，也就是“商业智能”
- * -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -
- * XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -
- * XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log
- *
+ * -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:src/main/java/com/janson/jvm/gc/example/bigc.log
+ *  第一次优化下面的参数唯一修改的就是“-XX:PretenureSizeThreshold”，把大对象阈值修改为了20MB，避免我们程序里分配的大对象直接进入老年代。
+ * -XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=20971520 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:src/main/java/com/janson/jvm/gc/example/bigc.log
  *
  * 新生代对象增长的速率
  * Young GC的触发频率
