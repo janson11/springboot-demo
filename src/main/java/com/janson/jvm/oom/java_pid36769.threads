@@ -1,0 +1,84 @@
+Thread 0x7bf2e0df0
+  at java.lang.Object.wait(J)V (Native Method)
+  at java.lang.ref.ReferenceQueue.remove(J)Ljava/lang/ref/Reference; (ReferenceQueue.java:144)
+  at java.lang.ref.ReferenceQueue.remove()Ljava/lang/ref/Reference; (ReferenceQueue.java:165)
+  at java.lang.ref.Finalizer$FinalizerThread.run()V (Finalizer.java:216)
+
+  locals:
+    objectId=0x7bf2f1430, line=1
+    objectId=0x7bf2e9b48, line=1
+    objectId=0x7bf2f1430, line=2
+    objectId=0x7bf2e0df0, line=3
+    objectId=0x7bf2e9b60, line=3
+
+Thread 0x7bf3130d8
+
+  locals:
+
+Thread 0x7bf3151b8
+  at java.lang.OutOfMemoryError.<init>()V (OutOfMemoryError.java:48)
+  at java.util.Arrays.copyOfRange([CII)[C (Arrays.java:3664)
+  at java.lang.String.<init>([CII)V (String.java:207)
+  at java.lang.StringBuilder.toString()Ljava/lang/String; (StringBuilder.java:407)
+  at com.janson.jvm.oom.HeapOOMDemo.main([Ljava/lang/String;)V (HeapOOMDemo.java:25)
+
+  locals:
+    objectId=0x7bfffff98, line=1
+    objectId=0x7bf2e9b90, line=4
+
+Thread 0x7bf31db38
+
+  locals:
+
+Thread 0x7bf315040
+  at java.lang.Object.wait(J)V (Native Method)
+  at java.lang.Object.wait()V (Object.java:502)
+  at java.lang.ref.Reference.tryHandlePending(Z)Z (Reference.java:191)
+  at java.lang.ref.Reference$ReferenceHandler.run()V (Reference.java:153)
+
+  locals:
+    objectId=0x7bf2e9b78, line=1
+    objectId=0x7bf2e9b78, line=2
+    objectId=0x7bf315040, line=3
+
+Thread 0x7bf2de1b8
+  at java.net.SocketInputStream.socketRead0(Ljava/io/FileDescriptor;[BIII)I (Native Method)
+  at java.net.SocketInputStream.socketRead(Ljava/io/FileDescriptor;[BIII)I (SocketInputStream.java:116)
+  at java.net.SocketInputStream.read([BIII)I (SocketInputStream.java:171)
+  at java.net.SocketInputStream.read([BII)I (SocketInputStream.java:141)
+  at sun.nio.cs.StreamDecoder.readBytes()I (StreamDecoder.java:284)
+  at sun.nio.cs.StreamDecoder.implRead([CII)I (StreamDecoder.java:326)
+  at sun.nio.cs.StreamDecoder.read([CII)I (StreamDecoder.java:178)
+  at java.io.InputStreamReader.read([CII)I (InputStreamReader.java:184)
+  at java.io.BufferedReader.fill()V (BufferedReader.java:161)
+  at java.io.BufferedReader.readLine(Z)Ljava/lang/String; (BufferedReader.java:324)
+  at java.io.BufferedReader.readLine()Ljava/lang/String; (BufferedReader.java:389)
+  at com.intellij.rt.execution.application.AppMainV2$1.run()V (AppMainV2.java:48)
+
+  locals:
+    objectId=0x7bf2e14b0, line=1
+    objectId=0x7bf2e13d0, line=1
+    objectId=0x7bf315d78, line=1
+    objectId=0x7bf2e14b0, line=2
+    objectId=0x7bf315d78, line=2
+    objectId=0x7bf2e13d0, line=2
+    objectId=0x7bf2e14b0, line=3
+    objectId=0x7bf315d78, line=3
+    objectId=0x7bf2e14e0, line=4
+    objectId=0x7bf2e14e0, line=5
+    objectId=0x7bf31f908, line=5
+    objectId=0x7bf2e1510, line=5
+    objectId=0x7bf324888, line=5
+    objectId=0x7bf2e14e0, line=6
+    objectId=0x7bf31f908, line=6
+    objectId=0x7bf3248a0, line=6
+    objectId=0x7bf3248a0, line=7
+    objectId=0x7bf31f908, line=7
+    objectId=0x7bf2e1540, line=8
+    objectId=0x7bf2e1540, line=9
+    objectId=0x7bf3248a0, line=9
+    objectId=0x7bf2e1540, line=10
+    objectId=0x7bf2de1b8, line=11
+    objectId=0x7bf2e13f0, line=11
+    objectId=0x7bf2e1540, line=11
+

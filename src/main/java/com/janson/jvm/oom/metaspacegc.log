@@ -1,0 +1,28 @@
+Java HotSpot(TM) 64-Bit Server VM (25.291-b10) for bsd-amd64 JRE (1.8.0_291-b10), built on Apr  8 2021 02:17:24 by "java_re" with gcc 4.2.1 Compatible Apple LLVM 11.0.0 (clang-1100.0.33.17)
+Memory: 4k page, physical 16777216k(71292k free)
+
+/proc/meminfo:
+
+CommandLine flags: -XX:CompressedClassSpaceSize=2097152 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/Users/shanjian/IdeaProjects/study/springboot-demo/src/main/java/com/janson/jvm/oom/ -XX:InitialHeapSize=268435456 -XX:MaxHeapSize=4294967296 -XX:MaxMetaspaceSize=10485760 -XX:MaxNewSize=697933824 -XX:MaxTenuringThreshold=6 -XX:MetaspaceSize=10485760 -XX:OldPLABSize=16 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC 
+1.295: [GC (Allocation Failure) 1.295: [ParNew: 69952K->2588K(78656K), 0.0158379 secs] 69952K->2588K(253440K), 0.0161373 secs] [Times: user=0.07 sys=0.02, real=0.02 secs] 
+1.701: [GC (Allocation Failure) 1.701: [ParNew: 72540K->3540K(78656K), 0.0200373 secs] 72540K->3540K(253440K), 0.0201367 secs] [Times: user=0.08 sys=0.02, real=0.02 secs] 
+1.888: [Full GC (Metadata GC Threshold) 1.888: [CMS: 0K->2638K(174784K), 0.0454010 secs] 17615K->2638K(253440K), [Metaspace: 9722K->9722K(1058816K)], 0.0455955 secs] [Times: user=0.10 sys=0.02, real=0.05 secs] 
+1.934: [Full GC (Last ditch collection) 1.934: [CMS: 2638K->1667K(174784K), 0.0211869 secs] 2638K->1667K(253504K), [Metaspace: 9722K->9722K(1058816K)], 0.0212960 secs] [Times: user=0.05 sys=0.01, real=0.02 secs] 
+1.956: [GC (CMS Initial Mark) [1 CMS-initial-mark: 1667K(174784K)] 1667K(253504K), 0.0002742 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+1.956: [CMS-concurrent-mark-start]
+1.977: [CMS-concurrent-mark: 0.004/0.020 secs] [Times: user=0.05 sys=0.01, real=0.02 secs] 
+1.977: [CMS-concurrent-preclean-start]
+1.979: [CMS-concurrent-preclean: 0.002/0.002 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+1.980: [GC (CMS Final Remark) [YG occupancy: 1358 K (78720 K)]1.980: [Rescan (parallel) , 0.0004093 secs]1.980: [weak refs processing, 0.0000201 secs]1.980: [class unloading, 0.0013828 secs]1.981: [scrub symbol table, 0.0002778 secs]1.982: [scrub string table, 0.0000981 secs][1 CMS-remark: 1667K(174784K)] 3026K(253504K), 0.0023062 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+1.982: [CMS-concurrent-sweep-start]
+1.983: [CMS-concurrent-sweep: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+1.983: [CMS-concurrent-reset-start]
+1.986: [CMS-concurrent-reset: 0.003/0.003 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+Heap
+ par new generation   total 78720K, used 1825K [0x00000006ffe00000, 0x0000000705360000, 0x0000000729790000)
+  eden space 70016K,   2% used [0x00000006ffe00000, 0x00000006fffc87f8, 0x0000000704260000)
+  from space 8704K,   0% used [0x0000000704260000, 0x0000000704260000, 0x0000000704ae0000)
+  to   space 8704K,   0% used [0x0000000704ae0000, 0x0000000704ae0000, 0x0000000705360000)
+ concurrent mark-sweep generation total 174784K, used 1667K [0x0000000729790000, 0x0000000734240000, 0x00000007ffe00000)
+ Metaspace       used 9750K, capacity 10186K, committed 10240K, reserved 1058816K
+  class space    used 863K, capacity 881K, committed 896K, reserved 1048576K

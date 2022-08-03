@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
  *
  * Caused by: java.lang.OutOfMemoryError: Metaspace
  *
+ * 分析oom日志
+ * -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:MetaspaceSize=10m -XX:MaxMetaspaceSize=10m -XX:+PrintGCDetails -Xloggc:gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./
+ *
  * @Author: shanjian
  * @Date: 2022/8/1 10:09 上午
  */
@@ -48,6 +51,14 @@ public class MetaspaceOOMDemo {
     static class Car {
         public void run() {
             System.out.println("汽车启动，开始行驶......");
+        }
+    }
+
+    static class SafeCar extends Car {
+        @Override
+        public void run() {
+            System.out.println("汽车启动，开始形式......");
+            super.run();
         }
     }
 }
