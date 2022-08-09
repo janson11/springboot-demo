@@ -3,7 +3,7 @@ package com.janson.algorithm.basic;
 import java.util.Arrays;
 
 /**
- * @Description: 冒泡排序
+ * @Description: 冒泡排序 时间复杂度O(N^2)
  * 思想：0->1 总是对0和1的两个数进行排序，如果左边的数据大于右边的数就交互位置，每次只会把排出来一个数放到最右边。
  * 第一次 0——>N    index：0和1
  * 第二次 0——>N-1  index：1和2
