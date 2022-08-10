@@ -1,5 +1,7 @@
 package com.janson.algorithm.basic;
 
+import com.janson.algorithm.utils.SortDetectorUtils;
+
 import java.util.Arrays;
 
 /**
@@ -50,80 +52,19 @@ public class BubbleSort {
         int value = 100;
         boolean succeed = true;
         for (int i = 0; i < testTime; i++) {
-//            System.out.println("i:"+i);
-            int[] arr1 = generateRandomArray(size, value);
-            int[] arr2 = copyArray(arr1);
-            int[] arr3 = copyArray(arr1);
+            int[] arr1 = SortDetectorUtils.generateRandomArray(size, value);
+            int[] arr2 = SortDetectorUtils.copyArray(arr1);
+            int[] arr3 = SortDetectorUtils.copyArray(arr1);
             bubbleSort(arr1);
-            rightMethod(arr2);
-            if (!isEqual(arr1, arr2)) {
+            SortDetectorUtils.rightMethod(arr2);
+            if (!SortDetectorUtils.isEqual(arr1, arr2)) {
                 succeed = false;
-                printArray(arr3);
+                SortDetectorUtils.printArray(arr3);
                 break;
             }
 
         }
         System.out.println(succeed ? "Nice!" : "Fucking fucked!");
     }
-
-    private static void printArray(int[] arr) {
-        if (arr == null) {
-            return;
-        }
-        for (int i = 0; i < arr.length; i++) {
-            System.out.println(arr[i] + " ");
-        }
-        System.out.println();
-    }
-
-    private static boolean isEqual(int[] arr1, int[] arr2) {
-        if ((arr1 == null && arr2 != null) || (arr1 != null && arr2 == null)) {
-            return false;
-        }
-        if (arr1 == null && arr2 == null) {
-            return true;
-        }
-        if (arr1.length != arr2.length) {
-            return false;
-        }
-        for (int i = 0; i < arr1.length; i++) {
-            if (arr1[i] != arr2[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    // for test
-    public static int[] copyArray(int[] arr) {
-        if (arr == null) {
-            return null;
-        }
-        int[] res = new int[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            res[i] = arr[i];
-        }
-        return res;
-    }
-
-
-    // for test 2、绝对正确的方法
-    public static void rightMethod(int[] arr) {
-        Arrays.sort(arr);
-    }
-
-    // for test 对数器  1、随机数组发生器
-    public static int[] generateRandomArray(int size, int value) {
-        // Math.random() ->double [0,1)
-        // (int) ((size + 1) * Math.random()) ——> [0,size]整数
-        // 生成长度随机的数组
-        int[] arr = new int[(int) ((size + 1) * Math.random())];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = (int) ((value + 1) * Math.random()) - (int) (value * Math.random());
-        }
-        return arr;
-    }
-
 
 }
