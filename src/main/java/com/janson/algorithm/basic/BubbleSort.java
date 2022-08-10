@@ -50,6 +50,7 @@ public class BubbleSort {
         int value = 100;
         boolean succeed = true;
         for (int i = 0; i < testTime; i++) {
+//            System.out.println("i:"+i);
             int[] arr1 = generateRandomArray(size, value);
             int[] arr2 = copyArray(arr1);
             int[] arr3 = copyArray(arr1);
@@ -62,11 +63,17 @@ public class BubbleSort {
             }
 
         }
-        System.out.println(succeed ? "Nice!" :"");
+        System.out.println(succeed ? "Nice!" : "Fucking fucked!");
     }
 
-    private static void printArray(int[] arr3) {
-        System.out.println(Arrays.toString(arr3));
+    private static void printArray(int[] arr) {
+        if (arr == null) {
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i] + " ");
+        }
+        System.out.println();
     }
 
     private static boolean isEqual(int[] arr1, int[] arr2) {
