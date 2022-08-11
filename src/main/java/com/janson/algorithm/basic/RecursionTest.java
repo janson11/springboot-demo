@@ -3,6 +3,17 @@ package com.janson.algorithm.basic;
 /**
  * @Description: 递归测试
  *  任何递归行为都可以改成非递归【一定对的，改成非递归自己压栈】
+ *  剖析递归行为和递归行为时间复杂度的估算
+ *  T(N)=a*T(N/b) +O(N^d)
+ *  N ：原始大小的样本量
+ *  n/b:子过程的样本量
+ *  a: 发生子过程的次数
+ *  N^d ：除去调用子过程之外，剩下的代价
+ *
+ *  1） log(b,a) >d ->复杂度为O(N^log(b,a)
+ *  2） log(b,a) =d ->复杂度为O(N^d*logN)
+ *  3） log(b,a) <d ->复杂度为O(N^d)
+ *
  * @Author: shanjian
  * @Date: 2022/8/10 10:22 上午
  */
