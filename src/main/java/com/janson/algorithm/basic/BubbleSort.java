@@ -45,26 +45,6 @@ public class BubbleSort {
     }
 
 
-    // for test 大样本测试
-    public static void main(String[] args) {
-        int testTime = 500000;
-        int size = 10;
-        int value = 100;
-        boolean succeed = true;
-        for (int i = 0; i < testTime; i++) {
-            int[] arr1 = SortDetectorUtils.generateRandomArray(size, value);
-            int[] arr2 = SortDetectorUtils.copyArray(arr1);
-            int[] arr3 = SortDetectorUtils.copyArray(arr1);
-            bubbleSort(arr1);
-            SortDetectorUtils.rightMethod(arr2);
-            if (!SortDetectorUtils.isEqual(arr1, arr2)) {
-                succeed = false;
-                SortDetectorUtils.printArray(arr3);
-                break;
-            }
 
-        }
-        System.out.println(succeed ? "Nice!" : "Fucking fucked!");
-    }
 
 }
