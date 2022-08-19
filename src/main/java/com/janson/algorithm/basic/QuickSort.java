@@ -3,7 +3,7 @@ package com.janson.algorithm.basic;
 import java.util.Arrays;
 
 /**
- * @Description: 快速排序   [和数据状况有关系，时间复杂度最好的情况O(N*logN),最坏的情况O(N^2)]
+ * @Description: 快速排序   [和数据状况有关系，时间复杂度最好的情况O(N*logN),最坏的情况O(N^2) ,随机快排的额外空间复杂度O(logN)]
  *
  * 经典快排，每次只搞定一个数
  * 改进的快排，每次搞定一个数组 new int[]{less + 1, more};
@@ -31,6 +31,7 @@ public class QuickSort {
             swap(arr,L+(int)(Math.random()*(R-L+1)),R);
 
             int[] p =partition(arr,L,R);
+
             quickSort(arr,L,p[0]-1);
             quickSort(arr,p[1]+1,R);
 
