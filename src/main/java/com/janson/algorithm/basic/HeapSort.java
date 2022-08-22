@@ -12,4 +12,43 @@ package com.janson.algorithm.basic;
  * @Date: 2022/8/19 10:07 上午
  */
 public class HeapSort {
+
+    public static void heapsort(int[] arr) {
+        if (arr ==null || arr.length<2) {
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            // 0~i
+            heapInsert(arr,i);
+        }
+        int heapSize = arr.length;
+        swap(arr,0,--heapSize);
+        while (heapSize>0) {
+            heapify(arr,0,heapSize);
+            swap(arr,0,--heapSize);
+        }
+    }
+
+    /**
+     * 将数组变换成大根堆（节点的父子比节点大）
+     * @param arr
+     * @param index
+     */
+    private static void heapInsert(int[] arr, int index) {
+        // (index-1)/2 父位置
+        while(arr[index] >arr[(index-1)/2]) {
+            swap(arr,index,(index-1)/2);
+            index = (index-1)/2;
+        }
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+//        arr[i]= arr[i] ^ arr[j];
+//        arr[j]= arr[i] ^ arr[j];
+//        arr[i]= arr[i] ^ arr[j];
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+
 }
