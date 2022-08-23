@@ -14,31 +14,46 @@ package com.janson.algorithm.basic;
 public class HeapSort {
 
     public static void heapsort(int[] arr) {
-        if (arr ==null || arr.length<2) {
+        if (arr == null || arr.length < 2) {
             return;
         }
         for (int i = 0; i < arr.length; i++) {
             // 0~i
-            heapInsert(arr,i);
+            heapInsert(arr, i);
         }
         int heapSize = arr.length;
-        swap(arr,0,--heapSize);
-        while (heapSize>0) {
-            heapify(arr,0,heapSize);
-            swap(arr,0,--heapSize);
+        swap(arr, 0, --heapSize);
+        while (heapSize > 0) {
+            heapify(arr, 0, heapSize);
+            swap(arr, 0, --heapSize);
+        }
+    }
+
+    private static void heapify(int[] arr, int index, int heapSize) {
+        int left = index * 2 + 1;
+        while (left < heapSize) {
+            int largest = left + 1 < heapSize && arr[left + 1] > arr[left] ? left + 1 : left;
+            largest = arr[largest] > arr[index] ? largest : index;
+            if (largest==index) {
+                break;
+            }
+            swap(arr,largest,index);
+            index = largest;
+            left = index *2 +1;
         }
     }
 
     /**
      * 将数组变换成大根堆（节点的父子比节点大）
+     *
      * @param arr
      * @param index
      */
     private static void heapInsert(int[] arr, int index) {
         // (index-1)/2 父位置
-        while(arr[index] >arr[(index-1)/2]) {
-            swap(arr,index,(index-1)/2);
-            index = (index-1)/2;
+        while (arr[index] > arr[(index - 1) / 2]) {
+            swap(arr, index, (index - 1) / 2);
+            index = (index - 1) / 2;
         }
     }
 
