@@ -5,6 +5,8 @@ import com.janson.algorithm.entity.Student;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @Description:
@@ -38,6 +40,17 @@ public class MyComparator implements Comparator<Integer> {
             Student student = heap.poll();
             System.out.println("Name:"+student.getName()+",Id:"+student.getId() +",Age:"+student.getAge());
         }
+//        TreeMap<Student,Integer> treeMap = new TreeMap<>(new Student.IdAscendingComparator());
+        TreeSet<Student> treeSet = new TreeSet<>(new Student.IdAscendingComparator());
+        treeSet.add(student3);
+        treeSet.add(student2);
+        treeSet.add(student1);
+        while (!treeSet.isEmpty()) {
+            System.out.println("========");
+            Student student = treeSet.pollFirst();
+            System.out.println("Name:"+student.getName()+",Id:"+student.getId() +",Age:"+student.getAge());
+        }
+
 
     }
 }
