@@ -1,4 +1,4 @@
-package com.janson.rocketmq;
+package com.janson.netty;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,9 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Date: 2022/6/13 4:13 下午
  */
 @SpringBootApplication
-public class RocketmqApp {
+public class NettyApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(RocketmqApp.class, args);
+        SpringApplication.run(NettyApp.class, args);
     }
 }
