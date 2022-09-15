@@ -20,7 +20,7 @@ public class ProducerDelayTest {
 
     public static void main(String[] args) {
 
-        DefaultMQProducer producer = new DefaultMQProducer("PRODUCER_DELAY_TEST_GROUP");
+        DefaultMQProducer producer = new DefaultMQProducer("PRODUCER_DELAY_TEST_LOCAL_GROUP");
         producer.setNamesrvAddr("localhost:9876");
         LocalDateTime now = LocalDateTime.now();
         Message msg = new Message("DelayTestTopic", "TagA", ("Hello Rocketmq Delay Message" + now).getBytes(StandardCharsets.UTF_8));
