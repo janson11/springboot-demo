@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>nio-demos</module>
+        <module>netty-common</module>
     </modules>
 
     <parent>
