@@ -11,12 +11,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * @Description:
+ * @Description: 文件快速复制
  * @Author: shanjian
  * @Date: 2022/9/16 11:37 上午
  */
 @Slf4j
-public class FileNIOCopyDemo {
+public class FileNIOFastCopyDemo {
 
     public static void main(String[] args) {
         // 演示复制资源文件

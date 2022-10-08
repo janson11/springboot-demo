@@ -47,4 +47,29 @@ public class ConfigProperties {
         }
     }
 
+    /**
+     * 按key获取值
+     *
+     * @param key
+     * @return
+     */
+    public String readProperty(String key) {
+        String value = "";
+        value = properties.getProperty(key);
+        return value;
+    }
+
+    public String getValue(String key) {
+        return readProperty(key);
+    }
+
+    public int getIntValue(String key) {
+        return Integer.parseInt(readProperty(key));
+    }
+
+    public static ConfigProperties loadFromFile(Class aClass) {
+        ConfigProperties propertiesUtil = null;
+        return propertiesUtil;
+    }
+
 }
