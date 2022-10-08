@@ -20,20 +20,32 @@ public class FileNIOFastCopyDemo {
 
     public static void main(String[] args) {
         // 演示复制资源文件
-        nioCopyResouceFile();
+        fastCopyResouceFile();
     }
 
     /**
-     * 复制来逛逛资源目录下的文件
+     * 复制两个资源目录下的文件
      */
-    public static void nioCopyResouceFile() {
-        String sourcePath = NioDemoConfig.FILE_RESOURCE_SRC_PATH;
-        String srcPath = IOUtil.getResourcePath(sourcePath);
+    public static void fastCopyResouceFile() {
+        String srcPath = getSourceFile();
 
+        String destPath = getDestFile();
+
+        fastCopyFile(srcPath, destPath);
+    }
+
+    private static String getDestFile() {
         String destShortPath = NioDemoConfig.FILE_RESOURCE_DEST_PATH;
         String destPath = IOUtil.builderResourcePath(destShortPath);
+        log.debug("destDecodePath={}",destPath);
+        return destPath;
+    }
 
-        nioCopyFile(srcPath, destPath);
+    private static String getSourceFile() {
+        String sourcePath = NioDemoConfig.FILE_RESOURCE_SRC_PATH;
+        String srcPath = IOUtil.getResourcePath(sourcePath);
+        log.debug("srcDecodePath={}",srcPath);
+        return srcPath;
     }
 
 
@@ -43,7 +55,7 @@ public class FileNIOFastCopyDemo {
      * @param srcPath
      * @param destPath
      */
-    public static void nioCopyFile(String srcPath, String destPath) {
+    public static void fastCopyFile(String srcPath, String destPath) {
         File srcFile = new File(srcPath);
         File destFile = new File(destPath);
         try {
@@ -60,23 +72,15 @@ public class FileNIOFastCopyDemo {
                 fos = new FileOutputStream(destFile);
                 inChannel = fis.getChannel();
                 outChannle = fos.getChannel();
-                int length = -1;
-                ByteBuffer buf = ByteBuffer.allocate(1024);
-                // 从输入通道读取到buf
-                while ((length = inChannel.read(buf)) != -1) {
-                    // 翻转buf,变成读模式
-                    buf.flip();
-
-                    int outLength = 0;
-                    // 将buf写入到输出的通道
-                    while ((outLength = outChannle.write(buf)) != 0) {
-                        log.info("写入字节数:{}", outLength);
-                    }
-
-                    // 清楚buf，变成写模式
-                    buf.clear();
+                long size = inChannel.size();
+                long pos = 0;
+                long count =0;
+                while (pos <size) {
+                    // 每次复制最多1024个字节，没有就复制剩余的
+                    count = size - pos >1024?1024:size-pos;
+                    //复制内存，偏移量pos +count长度
+                    pos+=outChannle.transferFrom(inChannel,pos,count);
                 }
-
                 // 强制刷新磁盘
                 outChannle.force(true);
 

@@ -6,6 +6,12 @@ import java.nio.IntBuffer;
 
 /**
  * @Description:
+ * 使用Buffer类的基本步骤：
+ *  1、使用创建子类实例对象的allocate()方法，创建一个Buffer类的实例对象。
+ *  2、调用put方法，将数据希尔到缓冲区中。
+ *  3、写入完成后，在开始读取数据前，调用Buffer.flip()方法，将缓冲区转换成读模式。
+ *  4、调用get方法，从缓冲区读取数据。
+ *  5、读取完成后，调用Buffer.clear() 或Buffer.compact()方法，将缓冲区转换为写入模式。
  * @Author: shanjian
  * @Date: 2022/9/16 10:43 上午
  */

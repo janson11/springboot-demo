@@ -24,7 +24,7 @@ public class FileNIOCopyDemo {
     }
 
     /**
-     * 复制来逛逛资源目录下的文件
+     * 复制两个资源目录下的文件
      */
     public static void nioCopyResouceFile() {
         String sourcePath = NioDemoConfig.FILE_RESOURCE_SRC_PATH;
