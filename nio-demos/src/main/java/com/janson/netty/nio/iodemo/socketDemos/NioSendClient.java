@@ -115,9 +115,12 @@ public class NioSendClient {
 
             if (length == -1) {
                 IOUtil.closeQuietly(fileChannel);
+                // 在SocketChannel传输通道关闭前，尽量发送一个输出结束标志到对端
                 socketChannel.shutdownOutput();
                 IOUtil.closeQuietly(socketChannel);
             }
+
+            log.info("=================文件传送成功================");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
