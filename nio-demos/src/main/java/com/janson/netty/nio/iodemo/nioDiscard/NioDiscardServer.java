@@ -90,7 +90,7 @@ public class NioDiscardServer {
             }
         }
 
-        // 7、关闭连接
+        // 16、关闭连接
         serverSocketChannel.close();
     }
 }

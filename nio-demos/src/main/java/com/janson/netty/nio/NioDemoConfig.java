@@ -1,5 +1,6 @@
 package com.janson.netty.nio;
 
+
 import com.janson.netty.common.util.ConfigProperties;
 
 /**

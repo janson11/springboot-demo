@@ -1,6 +1,5 @@
 package com.janson.netty.common.util;
 
-import javax.swing.JFileChooserBeanInfo;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
