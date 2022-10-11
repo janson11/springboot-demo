@@ -6,6 +6,7 @@
     <modules>
         <module>nio-demos</module>
         <module>netty-common</module>
+        <module>concurrent-demos</module>
     </modules>
 
     <parent>
