@@ -5,23 +5,21 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
+
 
 /**
  * @Description:
- *  Guava是非阻塞的异步回调，调用线程时不阻塞的，可以继续执行自己的业务逻辑。
- *  FutureTask是阻塞的异步回调，调用线程时阻塞的，在获取异步结果的过程中，一直阻塞，等待异步线程返回结果。
  * @Author: shanjian
  * @Date: 2022/10/11 9:55 上午
  */
 @Slf4j
-public class GuavaFutureDemo {
+public class NettyFutureDemo {
 
     public static final int SLEEP_GAP = 5000;
 
@@ -122,53 +120,42 @@ public class GuavaFutureDemo {
 
         Callable<Boolean> wJob = new WashJob();
 
-        // 创建java线程池
-        ExecutorService jPool = Executors.newFixedThreadPool(10);
-
-        //包装java线程池，构造guava线程池
-        ListeningExecutorService gPool = MoreExecutors.listeningDecorator(jPool);
-
-        //提交烧水的业务逻辑，取到异步任务
-        ListenableFuture<Boolean> hotFuture = gPool.submit(hJob);
+        // 创建netty线程池
+        DefaultEventExecutorGroup nPool = new DefaultEventExecutorGroup(2);
+        Future<Boolean> hotFuture = nPool.submit(hJob);
 
         // 绑定任务执行完成后的回调，到异步任务
-        Futures.addCallback(hotFuture, new FutureCallback<Boolean>() {
+        hotFuture.addListener(new GenericFutureListener<Future<? super Boolean>>() {
             @Override
-            public void onSuccess(Boolean result) {
-                log.info("烧水成功，尝试喝茶");
-                if (result) {
-                    mainJob.waterOk =true;
+            public void operationComplete(Future<? super Boolean> future) throws Exception {
+                if (future.isSuccess()) {
+                    mainJob.waterOk = true;
+                    log.info("烧水完成，尝试着去超好吃吃茶");
                     mainJob.drinkTea();
+                } else {
+                    mainJob.waterOk = false;
+                    log.info("烧水失败啦！");
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                log.info("烧水失败，没有茶喝了");
-
             }
         });
 
 
         // 提交清洗的业务逻辑，取到异步任务
-        ListenableFuture<Boolean> washFuture = gPool.submit(wJob);
+        Future<Boolean> washFuture = nPool.submit(wJob);
         // 绑定任务执行完成后的回调，到异步任务
-        Futures.addCallback(washFuture, new FutureCallback<Boolean>() {
+        washFuture.addListener(new GenericFutureListener<Future<? super Boolean>>() {
             @Override
-            public void onSuccess(Boolean result) {
-                log.info("杯子洗成功，尝试喝茶");
-                if (result) {
+            public void operationComplete(Future<? super Boolean> future) throws Exception {
+                if (future.isSuccess()) {
                     mainJob.cupOk = true;
+                    log.info("杯子洗成功，尝试喝茶");
                     mainJob.drinkTea();
+                } else {
+                    mainJob.cupOk = false;
+                    log.info("杯子洗不了，没有茶喝了");
                 }
             }
-
-            @Override
-            public void onFailure(Throwable t) {
-                log.info("杯子洗不了，没有茶喝了");
-            }
         });
-
 
         log.info("{}运行结束", getCurThreadName());
     }
