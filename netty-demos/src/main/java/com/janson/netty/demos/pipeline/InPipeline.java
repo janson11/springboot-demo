@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
- * @Description: 流水线演示
+ * @Description: 入站流水线演示
  * @Author: shanjian
  * @Date: 2022/10/17 5:50 下午
  */
