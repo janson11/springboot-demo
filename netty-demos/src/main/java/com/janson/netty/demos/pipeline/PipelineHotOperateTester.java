@@ -46,20 +46,21 @@ public class PipelineHotOperateTester {
     //测试热处理器的热插拔
 
     /**
-     2022-10-20 11:15:00.153 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器A :被回调channelRead()
-     2022-10-20 11:15:00.154 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器B :被回调channelRead()
-     2022-10-20 11:15:00.154 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器C :被回调channelRead()
-     2022-10-20 11:15:00.154 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 第一次向通道写入站报文end
-     2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器B :被回调channelRead()
-     2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器C :被回调channelRead()
-     2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 第二次向通道写入站报文end
-     2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器B :被回调channelRead()
-     2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器C :被回调channelRead()
-     2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 第三次向通道写入站报文end
+     * 2022-10-20 11:15:00.153 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器A :被回调channelRead()
+     * 2022-10-20 11:15:00.154 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器B :被回调channelRead()
+     * 2022-10-20 11:15:00.154 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器C :被回调channelRead()
+     * 2022-10-20 11:15:00.154 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 第一次向通道写入站报文end
+     * 2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器B :被回调channelRead()
+     * 2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器C :被回调channelRead()
+     * 2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 第二次向通道写入站报文end
+     * 2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器B :被回调channelRead()
+     * 2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 入站处理器C :被回调channelRead()
+     * 2022-10-20 11:15:00.155 [main] INFO  c.j.netty.demos.pipeline.PipelineHotOperateTester - 第三次向通道写入站报文end
      */
+
     @Test
     public void testPipelineHotOperating() {
-        ChannelInitializer<EmbeddedChannel>  channelInitializer = new ChannelInitializer<EmbeddedChannel>() {
+        ChannelInitializer<EmbeddedChannel> channelInitializer = new ChannelInitializer<EmbeddedChannel>() {
             @Override
             protected void initChannel(EmbeddedChannel ch) throws Exception {
                 ch.pipeline().addLast(new SimpleHandlerA());
@@ -90,8 +91,5 @@ public class PipelineHotOperateTester {
         }
 
     }
-
-
-
 
 }
