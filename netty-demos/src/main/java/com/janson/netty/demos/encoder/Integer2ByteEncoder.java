@@ -6,7 +6,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @Description:
+ * @Description: 自定义编码器实现
  * @Author: shanjian
  * @Date: 2022/11/9 10:14 上午
  */

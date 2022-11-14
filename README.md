@@ -21,3 +21,6 @@ DelimiterBasedFrameDecoder是LineBasedFrameDecoder按照行分割的通用版本
 ####（4）自定义长度数据包解码器——LengthFieldBasedFrameDecoder
 这是一种基于灵活长度的解码器。在ByteBuf数据包中，加了一个长度字段，保存了原始数据包的长度。解码的时候，会按照这个长度进行原始数据包的提取。
 这种解码器在所有开箱即用解码器中是最为复杂的一种，后面会重点介绍。
+
+
+具有相互配套逻辑的编码器和解码器能否在同一类中，答案是肯定的，这就要用到Netty的新类型——Codec类型。
