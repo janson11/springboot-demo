@@ -1,5 +1,6 @@
 package com.janson.netty.demos.echoServer;
 
+import com.janson.netty.common.util.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -26,17 +27,17 @@ public class NettyEchoServerHandler  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf in = (ByteBuf) msg;
-        log.info("msg type: {} 堆内存：直接内存",in.hasArray());
+        Logger.info("msg type:  "+(in.hasArray()?"堆内存":"直接内存"));
         int len = in.readableBytes();
         byte[] arr = new byte[len];
         in.getBytes(0,arr);
-        log.info("server received :{}",new String(arr,"UTF-8"));
+        Logger.info("server received :"+new String(arr,"UTF-8"));
 
         // 写数据，异步任务
-        log.info("写回前，msg.refCnt :{}",in.refCnt());
+        Logger.info("写回前，msg.refCnt :"+in.refCnt());
         ChannelFuture f = ctx.writeAndFlush(msg);
         f.addListener(future -> {
-         log.info("写回后，msg.refCnt :{}",in.refCnt());
+            Logger.info("写回后，msg.refCnt :"+in.refCnt());
         });
 //        super.channelRead(ctx, msg);
     }

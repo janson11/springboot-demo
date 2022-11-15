@@ -1,5 +1,6 @@
 package com.janson.netty.demos.echoServer;
 
+import com.janson.netty.common.util.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,7 +23,7 @@ public class NettyEchoClientHandler extends ChannelInboundHandlerAdapter {
         int len = in.readableBytes();
         byte[] buf = new byte[len];
         in.getBytes(0, buf);
-        log.info("client received:{} ", new String(buf, "UTF-8"));
+        Logger.info("client received:{} "+ new String(buf, "UTF-8"));
         in.release();
     }
 }

@@ -24,3 +24,20 @@ DelimiterBasedFrameDecoder是LineBasedFrameDecoder按照行分割的通用版本
 
 
 具有相互配套逻辑的编码器和解码器能否在同一类中，答案是肯定的，这就要用到Netty的新类型——Codec类型。
+
+
+# JSON和ProtoBuf序列化
+## 1、 评价一个序列化框架的优缺点，大概从两个方面入手
+(1)、结果数据大小，原则上说，序列化后的数据尺寸越小，传输效率越高。
+(2)、结构复杂度，这会影响序列化/反序列化的效率，结构越复杂，越耗时。
+理论上来说说，对于性能要求不是太高的服务器程序，可以选择JSON系列的序列化框架，对于性能要求比较高的服务器程序，则应该选择传输效率更高的二进制序列化框架，目前建议是ProtoBuf
+
+## 2、什么是半包问题？
+半包问题包含了"粘包"和"半包"两种情况：
+(1)、粘包，指接收端（Receiver）收到了一个ByteBuf,包含了多个发送端(Sender)的Bytebuf,多个ByteBuf"粘"在了一起。
+(2)、半包，指接收端（Receiver）将一个发送端的ByteBuf"拆"开了，收到多个破碎的包，换句话说，一个接收端收到的ByteBuf是发送端的一个ByteBuf的一部分。
+
+在Netty中，分包的方法，从第7章可知，主要有两种方法：
+（1）可以自定义解码器分包器：基于ByteToMessageDecoder或者ReplayingDecoder，定义自己的进程缓冲区分包器。
+（2）使用Netty内置的解码器。如，使用Netty内置的LengthFieldBasedFrameDecoder自定义分隔符数据包解码器，对进程缓冲区ByteBuf进行正确的分包。
+在本章后面，这两种方法都会用到。
