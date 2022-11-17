@@ -1,4 +1,4 @@
-package com.janson.netty.common.protocol;
+package com.janson.netty.demos.protocol;
 
 import com.janson.netty.common.util.Logger;
 import org.junit.Test;

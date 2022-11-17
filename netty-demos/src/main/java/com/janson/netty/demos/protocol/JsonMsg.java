@@ -1,4 +1,4 @@
-package com.janson.netty.common.protocol;
+package com.janson.netty.demos.protocol;
 
 import com.janson.netty.common.util.JsonUtil;
 import com.janson.netty.common.util.RandomUtil;
@@ -20,7 +20,7 @@ public class JsonMsg {
      * 在通用方法中，使用阿里FastJson转换成Java对象
      */
     public static JsonMsg parseFromJson(String json){
-        return JsonUtil.jsonToPojo(json,JsonMsg.class);
+        return JsonUtil.jsonToPojo(json, JsonMsg.class);
     }
 
     /**
