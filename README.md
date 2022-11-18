@@ -41,3 +41,17 @@ DelimiterBasedFrameDecoder是LineBasedFrameDecoder按照行分割的通用版本
 （1）可以自定义解码器分包器：基于ByteToMessageDecoder或者ReplayingDecoder，定义自己的进程缓冲区分包器。
 （2）使用Netty内置的解码器。如，使用Netty内置的LengthFieldBasedFrameDecoder自定义分隔符数据包解码器，对进程缓冲区ByteBuf进行正确的分包。
 在本章后面，这两种方法都会用到。
+
+
+## Protobuf
+Protobuf是Google提出的一种数据交换的格式，是一套类似JSON或者XML的数据传输格式和规范，用于不同应用或进程之间进行通信。
+### Protobuf的编码过程为：
+使用预先定义的Message数据结构将实际的传输数据进行打包，然后编码成二进制的码流进行传输或者存储 。
+### Protobuf的解码过程则刚好与编码过程相反：
+将二进制码流解码成Protobuf自己定义的Message结构的POJO实例。
+Protobuf既独立于语言，又独立于平台。Google官方提供了多种语言的实现：Java、C#、C++、GO、JavaScript和Python。
+Protobuf数据包是一种二进制的格式，相对于文本格式的数据交换（JSON、XML）来说，速度要快很多。由于Protobuf优异的性能，
+使得它更加适用于分布式应用场景下的数据通信或者异构环境下的数据交换。
+
+总体来说，在一个需要大量数据传输的应用场景中，因为数据量很大，那么选择Protobuf可以明显地减少传输的数据量和提升网络IO的速度。
+对于打造一款高性能的通信服务器来说，Protobuf传输协议是最高性能的传输协议之一。
