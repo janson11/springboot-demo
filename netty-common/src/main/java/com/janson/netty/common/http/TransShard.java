@@ -1,8 +1,8 @@
-package com.crazymakercircle.http;
+package com.janson.netty.common.http;
 
 import com.alibaba.fastjson.JSONObject;
-import com.crazymakercircle.util.JsonUtil;
 import com.google.gson.JsonObject;
+import com.janson.netty.common.util.JsonUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;

@@ -8,6 +8,7 @@
         <module>netty-common</module>
         <module>concurrent-demos</module>
         <module>netty-demos</module>
+        <module>netty-httpServer-demos</module>
     </modules>
 
     <parent>

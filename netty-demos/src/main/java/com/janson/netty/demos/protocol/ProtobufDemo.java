@@ -1,5 +1,6 @@
 package com.janson.netty.demos.protocol;
 
+import com.janson.netty.common.im.common.bean.msg.ProtoMsg;
 import com.janson.netty.common.util.Logger;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
