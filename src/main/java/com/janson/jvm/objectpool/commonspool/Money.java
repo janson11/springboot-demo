@@ -1,4 +1,4 @@
-package com.janson.jvm.objectpool;
+package com.janson.jvm.objectpool.commonspool;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package com.janson.jvm.objectpool;
+package com.janson.jvm.objectpool.commonspool;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.PooledObject;
