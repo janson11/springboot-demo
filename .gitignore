@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/java/com/janson/thread/chapter12/SyncMethodTest.class
+/src/main/java/com/janson/jvm/classload/HelloByteCode.class
