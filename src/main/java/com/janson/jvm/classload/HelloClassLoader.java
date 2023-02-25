@@ -1,5 +1,7 @@
 package com.janson.jvm.classload;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Base64;
 
 /**
@@ -7,8 +9,14 @@ import java.util.Base64;
  * @Author: Janson
  * @Date: 2022/12/11 14:42
  **/
+@Slf4j
 public class HelloClassLoader extends ClassLoader {
     public static void main(String[] args) {
+
+        if (log.isInfoEnabled()) {
+            log.info("Hello");
+        }
+
         try {
             // 加载并初始化Hello类
             new HelloClassLoader().findClass("com.janson.jvm.classload.Hello").newInstance();
