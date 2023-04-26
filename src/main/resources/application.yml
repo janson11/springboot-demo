@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: rocketmq-demo
-
-server:
-  port: 10001
