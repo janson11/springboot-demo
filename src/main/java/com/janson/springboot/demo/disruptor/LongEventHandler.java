@@ -14,6 +14,6 @@ public class LongEventHandler implements EventHandler<LongEvent> {
 
     @Override
     public void onEvent(LongEvent event, long sequence, boolean endOfBatch) throws Exception {
-        log.info("Event: {}", event.getValue());
+        log.info("Event:{} sequence:{} endOfBatch:{}", event.getValue(), sequence, endOfBatch);
     }
 }
