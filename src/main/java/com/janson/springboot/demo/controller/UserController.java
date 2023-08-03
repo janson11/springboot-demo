@@ -3,6 +3,8 @@ package com.janson.springboot.demo.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @Description: user controller
  * @Author: Janson
@@ -11,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("user")
 public class UserController {
+
+    public static void main(String[] args) {
+        long l = TimeUnit.MINUTES.toMillis(3);
+        System.out.println(l);
+    }
 
 
 }
