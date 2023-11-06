@@ -2,8 +2,10 @@ package com.janson.springboot.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication
+@EnableEurekaServer
 public class SpringbootDemoApplication {
 
     public static void main(String[] args) {
