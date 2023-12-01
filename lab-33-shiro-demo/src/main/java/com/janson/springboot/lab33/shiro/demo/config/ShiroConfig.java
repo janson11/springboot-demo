@@ -23,8 +23,8 @@ public class ShiroConfig {
         // 创建SimpleAccountRealm对象
         SimpleAccountRealm realm = new SimpleAccountRealm();
         // 添加两个用户
-        realm.addAccount("admin","admin","ADMIN");
-        realm.addAccount("normal","normal","NORMAL");
+        realm.addAccount("admin", "admin", "ADMIN");
+        realm.addAccount("normal", "normal", "NORMAL");
         return realm;
     }
 
@@ -49,18 +49,19 @@ public class ShiroConfig {
         // 登录URL
         filterFactoryBean.setLoginUrl("/login");
         // 登陆成功URL
-        filterFactoryBean.setLoginUrl("/login_success");
+        filterFactoryBean.setSuccessUrl("/login_success");
         // 无权限URL
-        filterFactoryBean.setLoginUrl("/unauthorized");
+        filterFactoryBean.setUnauthorizedUrl("/unauthorized");
 
-
+        // 设置URL的权限配置
+        filterFactoryBean.setFilterChainDefinitionMap(this.filterChainDefinitionMap());
 
         return filterFactoryBean;
     }
 
-    private Map<String,String> filterChainDefinitionMap() {
+    private Map<String, String> filterChainDefinitionMap() {
         // 注意 要使用有序的LinkedHashMap ，顺序匹配
-        Map<String,String> filterMap = new LinkedHashMap<String,String>();
+        Map<String, String> filterMap = new LinkedHashMap<String, String>();
         // 允许匿名访问
         filterMap.put("/test/echo", "anon");
         // 需要ADMIN 角色

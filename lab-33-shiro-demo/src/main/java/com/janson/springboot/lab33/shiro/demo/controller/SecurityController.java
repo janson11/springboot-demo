@@ -60,4 +60,16 @@ public class SecurityController {
 
         return "登陆失败，原因：" + msg;
     }
+
+    @ResponseBody
+    @GetMapping("/login_success")
+    public String loginSuccess() {
+        return "登陆成功";
+    }
+
+    @ResponseBody
+    @GetMapping("/unauthorized")
+    public String unauthorized() {
+        return "你没有权限";
+    }
 }
