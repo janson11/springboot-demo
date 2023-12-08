@@ -1,4 +1,4 @@
-package com.janson.springboot.lab34.actuator.httptrace.config;
+package com.janson.springboot.lab34.actuator.auditevents.config;
 
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;

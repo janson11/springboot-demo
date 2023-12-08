@@ -1,4 +1,4 @@
-package com.janson.springboot.lab34.actuator.httptrace;
+package com.janson.springboot.lab34.actuator.auditevents;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
