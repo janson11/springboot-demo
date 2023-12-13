@@ -1,4 +1,4 @@
-package com.janson.springboot.lab34.actuator.auditevents;
+package com.janson.springboot.lab34.actuator.security;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Date: 2023/12/6 5:20 PM
  */
 @SpringBootApplication
-public class HttptraceActuatorApplication {
+public class AuditEventsActuatorApplication {
     public static void main(String[] args) {
-        SpringApplication.run(HttptraceActuatorApplication.class,args);
+        SpringApplication.run(AuditEventsActuatorApplication.class,args);
     }
 }
