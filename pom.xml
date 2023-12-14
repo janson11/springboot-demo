@@ -19,6 +19,8 @@
         <module>lab-01-spring-security</module>
         <module>lab-01-spring-security/lab-01-springsecurity-demo-role</module>
         <module>lab-34</module>
+        <module>lab-26</module>
+        <module>lab-26/lab-26-distributed-session-01</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: lab-26-distributed-session-01
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1
+server:
+  port: 10026
