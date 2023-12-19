@@ -19,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/session")
 public class SessionController {
 
+
     @GetMapping("/set")
     public void setSession(HttpSession session, @RequestParam("key") String key, @RequestParam("value") String value) {
         session.setAttribute(key, value);
