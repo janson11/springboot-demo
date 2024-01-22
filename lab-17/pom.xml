@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>lab-17-dynamic-datasource-baomidou-01</module>
+        <module>lab-17-dynamic-datasource-baomidou-02</module>
     </modules>
 
     <artifactId>lab-17</artifactId>

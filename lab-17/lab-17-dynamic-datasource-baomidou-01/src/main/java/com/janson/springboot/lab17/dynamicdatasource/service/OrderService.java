@@ -70,7 +70,6 @@ public class OrderService {
         System.out.println(user);
     }
 
-    @Transactional
     public void method04() {
         // 查询订单
         self().method041();

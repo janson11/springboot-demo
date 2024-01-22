@@ -1,10 +1,14 @@
 package com.janson.springboot.lab17.dynamicdatasource.service;
 
 import com.janson.springboot.lab17.dynamicdatasource.DynamicDatasourceApplication;
+import com.janson.springboot.lab17.dynamicdatasource.daoobject.OrderDO;
+import org.aspectj.weaver.ast.Or;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -23,35 +27,18 @@ public class OrderServiceTest {
     private OrderService orderService;
 
     @Test
-    public void method01() {
-        orderService.method01();
+    public void testAdd() {
+        OrderDO orderDO = new OrderDO();
+        orderDO.setUserId(20);
+        orderService.add(orderDO);
     }
 
 
-    /**
-     * org.springframework.jdbc.BadSqlGrammarException:
-     * ### Error querying database.  Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Table 'test_users.orders' doesn't exist
-     */
     @Test
-    public void method02() {
-        orderService.method02();
-    }
-
-    /**
-     * Table 'test_users.orders' doesn't exist
-     */
-    @Test
-    public void method03() {
-        orderService.method03();
-    }
-
-    @Test
-    public void method04() {
-        orderService.method04();
-    }
-
-    @Test
-    public void method05() {
-        orderService.method05();
+    public void testFindById() {
+        for (int i = 0; i < 10; i++) {
+            OrderDO orderDo = orderService.findById(1);
+            System.out.println(orderDo);
+        }
     }
 }
