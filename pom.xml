@@ -22,6 +22,8 @@
 <!--        <module>lab-26</module>-->
 <!--        <module>lab-26/lab-26-distributed-session-01</module>-->
         <module>lab-17</module>
+        <module>lab-12-mybatis</module>
+        <module>lab-12-mybatis/lab-12-mybatis-xml</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
