@@ -1,7 +1,7 @@
 spring:
   # datasource 数据源配置内容
   datasource:
-    url: jdbc:mysql://localhost:3306/test_mybatis?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/test_mybatis?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 12345678

@@ -27,13 +27,13 @@ public class UserMapperTest {
 
     @Test
     public void insert() {
-        UserDO user = UserDO.builder().username(UUID.randomUUID().toString()).password("janson").createTime(new Date()).build();
+        UserDO user = UserDO.builder().username(UUID.randomUUID().toString()).password("janson3").createTime(new Date()).build();
         userMapper.insert(user);
     }
 
     @Test
     public void updateById() {
-        UserDO updateUser = UserDO.builder().id(1).password("janson1").build();
+        UserDO updateUser = UserDO.builder().id(1).password("janson1").createTime(new Date()).build();
         userMapper.updateById(updateUser);
     }
 
@@ -50,13 +50,14 @@ public class UserMapperTest {
 
     @Test
     public void selectByUsername() {
-        UserDO janson = userMapper.selectByUsername("janson");
+        UserDO janson = userMapper.selectByUsername("janson1");
         System.out.println(janson);
     }
 
     @Test
     public void selectByIds() {
-        List<UserDO> userDOS = userMapper.selectByIds(Arrays.asList(1, 2, 3));
-        System.out.println("users: " + userDOS.size());
+        List<UserDO> userDOS = userMapper.selectByIds(Arrays.asList(1,3));
+        System.out.println("users size: " + userDOS.size());
+        System.out.println("users: " + userDOS);
     }
 }
