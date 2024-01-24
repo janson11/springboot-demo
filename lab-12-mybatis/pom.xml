@@ -13,6 +13,11 @@
 
     <artifactId>lab-12-mybatis</artifactId>
 
+    <modules>
+        <module>lab-12-mybatis-xml</module>
+        <module>lab-12-mybatis-annotation</module>
+    </modules>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
