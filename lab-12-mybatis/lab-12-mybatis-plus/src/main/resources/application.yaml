@@ -1,0 +1,21 @@
+spring:
+  # datasource 数据源配置内容
+  datasource:
+    url: jdbc:mysql://localhost:3306/test_mybatis?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 12345678
+
+# mybatis-plus配置内容
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 虽然默认为true ,但是还是显示去指定下
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 控制台输出SQL日志
+  global-config:
+    db-config:
+      id-type: auto # ID自增主键
+      logic-delete-value: 1 # 逻辑已删除值(默认为1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为0)=
+  mapper-locations: classpath:mapper/*.xml # 配置 Mapper XML 地址
+  type-aliases-package: cn.iocoder.springboot.lab12.mybatis.dataobject # 配置数据库实体包路径
+
