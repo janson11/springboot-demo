@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: lab-26-distributed-session-02
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: yourdatabase
+      username: test01
+      password: password01
+      # 上述配置也可以只配置uri
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core: DEBUG # 打印 mongodb 操作的具体语句。生产环境下，不建议开启。
+server:
+  port: 10027

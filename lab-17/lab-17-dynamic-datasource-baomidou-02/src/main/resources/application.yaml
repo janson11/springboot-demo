@@ -1,0 +1,36 @@
+
+spring:
+  datasource:
+    dynamic:
+      primary: master    # 设置默认的数据源或者数据源组，默认值即为 master
+      datasource:
+        # 订单 orders 主库的数据源配置
+        master:
+          url: jdbc:mysql://127.0.0.1:3306/test_orders?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+          driver-class-name: com.mysql.jdbc.Driver
+          username: root
+          password: 12345678
+        # 订单 orders 从库的数据源配置
+        slave_1:
+          url: jdbc:mysql://127.0.0.1:3306/test_orders_01?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+          driver-class-name: com.mysql.jdbc.Driver
+          username: root
+          password: 12345678
+        # 订单 orders 从库的数据源配置
+        slave_2:
+          url: jdbc:mysql://127.0.0.1:3306/test_orders_02?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+          driver-class-name: com.mysql.jdbc.Driver
+          username: root
+          password: 12345678
+  application:
+    name: lab-17-dynamic-datasource-baomidou-01
+
+
+
+# mybatis 配置内容
+mybatis:
+  config-location: classpath:mybatis-config.xml # 配置mybatis配置文件路径
+  mapper-locations: classpath:mapper/*.xml # 配置Mapper XML 地址
+  type-aliases-package: com/janson/springboot/lab17/dynamicdatasource/daoobject
+server:
+  port: 10017

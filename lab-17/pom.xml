@@ -11,12 +11,11 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>lab-26-distributed-session-01</module>
-        <module>lab-26-distributed-session-02</module>
-        <module>lab-26-distributed-session-springsecurity</module>
+        <module>lab-17-dynamic-datasource-baomidou-01</module>
+        <module>lab-17-dynamic-datasource-baomidou-02</module>
     </modules>
 
-    <artifactId>lab-26</artifactId>
+    <artifactId>lab-17</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
