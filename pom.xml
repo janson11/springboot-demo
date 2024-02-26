@@ -24,6 +24,7 @@
         <module>lab-17</module>
         <module>lab-12-mybatis</module>
         <module>lab-12-mybatis/lab-12-mybatis-xml</module>
+        <module>lab-05-benchmark-tomcat-jetty-undertow</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
