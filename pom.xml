@@ -21,6 +21,7 @@
         <module>lab-34</module>
         <module>lab-26</module>
         <module>lab-26/lab-26-distributed-session-01</module>
+        <module>lab-58</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
