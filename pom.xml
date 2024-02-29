@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.10.RELEASE</version>
+        <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.janson</groupId>
@@ -32,6 +32,8 @@
         <module>lab-12-mybatis</module>
         <module>lab-12-mybatis/lab-12-mybatis-xml</module>
         <module>lab-05-benchmark-tomcat-jetty-undertow</module>
+        <module>labx-08-spring-cloud-gateway</module>
+        <module>labx-08-spring-cloud-gateway/labx-08-sc-gateway-demo01</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -41,10 +43,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

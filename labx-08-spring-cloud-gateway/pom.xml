@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.janson</groupId>
+        <artifactId>springboot-demo</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>labx-08-spring-cloud-gateway</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>labx-08-sc-gateway-demo01</module>
+        <module>labx-08-sc-gateway-demo01-test</module>
+        <module>labx-08-sc-gateway-demo02-registry</module>
+        <module>labx-08-sc-gateway-demo03-config-apollo</module>
+        <module>labx-08-sc-user-service</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+</project>
