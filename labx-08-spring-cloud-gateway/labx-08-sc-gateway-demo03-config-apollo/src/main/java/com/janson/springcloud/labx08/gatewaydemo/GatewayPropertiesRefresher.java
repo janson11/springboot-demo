@@ -60,6 +60,14 @@ public class GatewayPropertiesRefresher implements ApplicationContextAware, Appl
         this.publisher = applicationEventPublisher;
     }
 
+    /**
+     * spring.cloud.gateway.routes[0].id = ReactiveCompositeDiscoveryClient_user-service
+     * spring.cloud.gateway.routes[0].uri = lb://user-service
+     * spring.cloud.gateway.routes[0].predicates[0] = Path=/user/**
+     * spring.cloud.gateway.routes[0].filters[0] = StripPrefix=1
+     *
+     * @param changeEvent
+     */
     @ApolloConfigChangeListener(interestedKeyPrefixes = "spring.cloud.gateway.")
     public void onChange(ConfigChangeEvent changeEvent) {
         refreshGatewayProperties(changeEvent);
@@ -111,7 +119,7 @@ public class GatewayPropertiesRefresher implements ApplicationContextAware, Appl
     /**
      * 刷新网关的路由定义信息
      * 目前具体监听该事件的有两个：
-     *
+     * <p>
      * CachingRouteDefinitionLocator 刷新路由定义
      * CachingRouteLocator 刷新路由信息
      */

@@ -10,16 +10,26 @@ spring:
    # Nacos 作为配置中心的配置项
    nacos:
      discovery:
-       server-addr: 127.0.0.1:8848
+       server-addr: http://dev-internal.nacos2.codemao.cn:8848
        # nacos 服务注册中心地址
 
 # Apollo 相关配置
+#app:
+#  id: ${spring.application.name} # 使用的Apollo的项目编号
+#apollo:
+#  meta: http://dev-internal.service-config-center.codemao.cn # Apollo Meta Server 地址
+#  bootstrap:
+#    enabled: true  # 是否开启Apollo配置预加载功能，默认为false
+#    eagerLoad:
+#      enable: true # 是否开启 Apollo 支持日志级别的加载时机。默认为 false。
+#    namespaces: application  # 使用的 Apollo 的命名空间，默认为 application。
+
+
+#加入apollo配置
 app:
-  id: ${spring.application.name} # 使用的Apollo的项目编号
+  id: ${spring.application.name}
 apollo:
-  meta: http://127.0.0.1:8080 # Apollo Meta Server 地址
   bootstrap:
-    enable: true  # 是否开启Apollo配置预加载功能，默认为false
-    eagerLoad:
-      enable: true # 是否开启 Apollo 支持日志级别的加载时机。默认为 false。
-    namespaces: application  # 使用的 Apollo 的命名空间，默认为 application。
+    enabled: true
+    namespaces: application, application-volatile
+  meta: http://test-internal.service-config-center.codemao.cn

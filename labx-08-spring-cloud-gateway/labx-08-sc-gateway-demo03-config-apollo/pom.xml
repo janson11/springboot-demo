@@ -62,6 +62,18 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>nacos-client</artifactId>
+                    <groupId>com.alibaba.nacos</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <artifactId>nacos-client</artifactId>
+            <groupId>com.alibaba.nacos</groupId>
+            <version>1.4.2</version>
         </dependency>
 
         <!--  引入 Apollo 客户端，内置对 Apollo 的自动化配置 -->
@@ -70,6 +82,12 @@
             <artifactId>apollo-client</artifactId>
             <version>1.5.1</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>cn.codemao.cloud</groupId>-->
+<!--            <artifactId>codemao-apollo-client-starter</artifactId>-->
+<!--            <version>2.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
