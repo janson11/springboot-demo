@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    # Spring Cloud Gateway 配置项，全部配置在 Nacos 中
+    # Nacos 作为注册中心的配置项
+    nacos:
+      discovery:
+        server-addr: http://dev-internal.nacos2.codemao.cn:8848
+#  profiles:
+#    active: dev
+
+
+#
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: github_route
+#          predicates:
+#            - Path=/**
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+#          uri: http://www.iocoder.cn/
