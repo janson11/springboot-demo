@@ -1,5 +1,8 @@
 package com.janson.mutithread.basic.create;
 
+import com.janson.util.Print;
+import static com.janson.util.ThreadUtil.getCurThreadName;
+
 /**
  * @Description:
  * @Author: Janson
@@ -20,9 +23,9 @@ public class CreateDemo {
         @Override
         public void run() {
             for (int i = 1; i < MAX_TURN; i++) {
-                // Print.cfo(getName()+",轮次："+i);
+                 Print.cfo(getName()+",轮次："+i);
             }
-            // Print.cfo(getName()+"运行结束.")
+             Print.cfo(getName()+"运行结束.");
         }
     }
 
@@ -33,7 +36,7 @@ public class CreateDemo {
             thread = new DemoThread();
             thread.start();
         }
-        // Print.cfo(getCurThreadName() +"运行结束.")
+         Print.cfo(getCurThreadName() +"运行结束.");
     }
 
 }

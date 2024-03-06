@@ -117,7 +117,7 @@ public class ThreadUtil {
      * @param unit
      */
     public static void delayRun(Runnable command, int i, TimeUnit unit) {
-        getSeqOrScheduledExecutorService().schedule(command, i, unit)
+        getSeqOrScheduledExecutorService().schedule(command, i, unit);
     }
 
 
