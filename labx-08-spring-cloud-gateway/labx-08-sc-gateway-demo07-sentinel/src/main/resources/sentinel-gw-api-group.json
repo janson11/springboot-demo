@@ -1,0 +1,23 @@
+[
+  {
+    "apiName": "yudaoyuanma_customized_api",
+    "predicateItems": [
+      {
+        "pattern": "/categories/**",
+        "matchStrategy": 1
+      },
+      {
+        "itmes": [
+          {
+            "pattern": "/Dubbo/good-collections/",
+            "matchStrategy": 0
+          },
+          {
+            "pattern": "/SkyWalking/**",
+            "matchStrategy": 1
+          }
+        ]
+      }
+    ]
+  }
+]
