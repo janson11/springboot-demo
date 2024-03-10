@@ -38,5 +38,4 @@ public class CreateDemo {
         }
          Print.cfo(getCurThreadName() +"运行结束.");
     }
-
 }
