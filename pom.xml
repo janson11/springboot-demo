@@ -36,6 +36,8 @@
         <module>labx-08-spring-cloud-gateway/labx-08-sc-gateway-demo01</module>
         <module>lab-11-spring-data-redis</module>
         <module>lab-11-spring-data-redis/lab-11-spring-data-redis-with-jedis</module>
+        <module>lab-19</module>
+        <module>lab-19/lab-19-datasource-pool-hikaricp-single</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
