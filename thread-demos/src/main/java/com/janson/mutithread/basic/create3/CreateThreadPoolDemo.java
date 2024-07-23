@@ -1,6 +1,10 @@
 package com.janson.mutithread.basic.create3;
 
+import com.janson.util.Print;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.janson.util.ThreadUtil.sleepMilliSeconds;
 
 /**
  * @Description:
@@ -16,12 +20,19 @@ public class CreateThreadPoolDemo {
     public static class TargetTask implements Runnable {
 
         static AtomicInteger taskNo = new AtomicInteger(1);
-        protected String taskName;
+        private String taskName;
+
+        public TargetTask() {
+            taskName = "task-" + taskNo.get();
+            taskNo.incrementAndGet();
+        }
 
         @Override
         public void run() {
-            taskName = "task-"+taskNo.get();
-            taskNo.incrementAndGet();
+            Print.tco("任务：" + taskName + " doing");
+            // 线程睡眠一会
+            sleepMilliSeconds(SLEEP_GAP);
+            Print.tco("任务：" + taskName + " 运行结束.");
         }
     }
 
