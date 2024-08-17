@@ -1,11 +1,15 @@
 package com.janson.mutithread.basic.create3;
 
 import com.janson.util.Print;
+import javafx.scene.control.Tab;
 import org.junit.Test;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -115,7 +119,109 @@ public class CreateThreadPoolDemoTest {
             // 设置为守护线程
             t.setDaemon(true);
             return t;
-
         }
     }
+
+    @Test
+    public void testThreadFactory() {
+        // 使用自定义线程工厂，快捷创建线程池
+        ExecutorService pool = Executors.newFixedThreadPool(2, new SimpleThreadFactory());
+        for (int i = 0; i < 5; i++) {
+            pool.submit(new CreateThreadPoolDemo.TargetTask());
+        }
+        // 等待10秒后关闭线程池
+        sleepSeconds(10);
+        Print.tco("等待10秒后关闭线程池");
+        pool.shutdown();
+    }
+
+    //自定义拒绝策略
+    public static class CustomIgnorePolicy implements RejectedExecutionHandler {
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+            // 打印日志
+            Print.tco(r + " rejected; " + " - getTaskCount: " + executor.getTaskCount());
+        }
+    }
+
+
+    @Test
+    public void testCustomIgnorePolicy() {
+        int corePoolSize = 2;
+        int maximumPoolSize = 4;
+        long keepAliveTime = 10;
+        TimeUnit unit = TimeUnit.SECONDS;
+        // 最大排队任务数
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(2);
+        // 线程工厂
+        ThreadFactory threadFactory = new SimpleThreadFactory();
+        // 拒绝和异常策略
+        RejectedExecutionHandler policy = new CustomIgnorePolicy();
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, policy);
+        // 预启动所有核心线程
+        for (int i = 0; i < 10; i++) {
+            pool.execute(new CreateThreadPoolDemo.TargetTask());
+        }
+
+        // 等待10秒后关闭线程池
+        sleepSeconds(10);
+        Print.tco("等待10秒后关闭线程池");
+        pool.shutdown();
+    }
+
+
+    // 线程本地变量，用于记录线程异步任务的开始执行时间
+    private static final ThreadLocal<Long> START_TIME = new ThreadLocal<>();
+
+    @Test
+    public void testHooks() {
+        ExecutorService pool = new ThreadPoolExecutor(2, 4, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(2)) {
+            @Override
+            protected void terminated() {
+                Print.tco("调度器已经终止!");
+            }
+
+            @Override
+            protected void beforeExecute(Thread t, Runnable r) {
+                Print.tco(r + "前钩子被执行");
+                // 记录开始执行时间
+                START_TIME.set(System.currentTimeMillis());
+                super.beforeExecute(t, r);
+            }
+
+            @Override
+            protected void afterExecute(Runnable r, Throwable t) {
+                super.afterExecute(r, t);
+                // 计算执行时长
+                long time = (System.currentTimeMillis()) - START_TIME.get();
+                Print.tco(r + "后钩子被执行，执行时长：(ms)" + time);
+                // 清空本地变量
+                START_TIME.remove();
+            }
+        };
+
+        pool.execute(new CreateThreadPoolDemo.TargetTask());
+        // 等待10秒后关闭线程池
+        sleepSeconds(10);
+        Print.tco("等待10秒后关闭线程池");
+        pool.shutdown();
+    }
+
+
+    @Test
+    public void testNewFixedThreadPool2() {
+        // 创建一个固定大小的线程池
+        ExecutorService pool = Executors.newFixedThreadPool(1);
+        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) pool;
+        Print.tco(threadPoolExecutor.getMaximumPoolSize());
+        // 设置核心线程数
+        threadPoolExecutor.setCorePoolSize(8);
+
+        // 创建一个单线程池化的线程池
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        // 转换成普通线程池，惠抛出运行时异常 java.lang.ClassCastException
+        ((ThreadPoolExecutor) singleThreadExecutor).setCorePoolSize(8);
+    }
+
+
 }
