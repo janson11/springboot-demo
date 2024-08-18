@@ -20,7 +20,7 @@ public class CreateThreadPoolDemo {
     public static class TargetTask implements Runnable {
 
         static AtomicInteger taskNo = new AtomicInteger(1);
-        private String taskName;
+        protected String taskName;
 
         public TargetTask() {
             taskName = "task-" + taskNo.get();

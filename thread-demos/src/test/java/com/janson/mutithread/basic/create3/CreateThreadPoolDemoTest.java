@@ -1,13 +1,19 @@
 package com.janson.mutithread.basic.create3;
 
 import com.janson.util.Print;
+import com.janson.util.RandomUtil;
 import javafx.scene.control.Tab;
+import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Test;
 
+import java.sql.Time;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
@@ -223,5 +229,83 @@ public class CreateThreadPoolDemoTest {
         ((ThreadPoolExecutor) singleThreadExecutor).setCorePoolSize(8);
     }
 
+    static class TargetTaskWithError extends CreateThreadPoolDemo.TargetTask {
+        @Override
+        public void run() {
+            super.run();
+            throw new RuntimeException("Error from " + taskName);
+        }
+    }
+
+    @Test
+    public void testSubmit() {
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(2);
+        pool.execute(new TargetTaskWithError());
+        /**
+         * submit(Runnable task)方法：
+         * 该方法用于提交一个 Runnable 任务到线程池中，并返回一个 Future 类型的对象，该对象代表了该 Runnable 任务的执行结果。
+         */
+        Future<?> future = pool.submit(new TargetTaskWithError());
+
+        try {
+            // 如果异常抛出，会在调用Future.get()方法时传递给调用者
+            if (future.get() == null) {
+                // 如果Future.get()方法返回null，则代表任务执行完成
+                Print.tco("任务执行成功");
+            }
+        } catch (Exception e) {
+            Print.tco(e.getCause().getMessage());
+        }
+
+        sleepSeconds(10);
+        pool.shutdown();
+    }
+
+    //测试用例：获取异步调用的结果
+    @Test
+    public void testSubmit2() {
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(2);
+        Future<Integer> future = pool.schedule(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                // 返回200 - 300之间的随机数
+                return RandomUtil.randInRange(200, 300);
+            }
+        }, 100, TimeUnit.MILLISECONDS);
+
+        try {
+            Integer result = future.get();
+            Print.tco("异步调用的结果：" + result);
+        } catch (InterruptedException e) {
+            Print.tco("异步调用被中断");
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            Print.tco("异步调用过程中，发生了异常");
+            throw new RuntimeException(e);
+        }
+
+        sleepSeconds(10);
+        pool.shutdown();
+    }
+
+
+    @Test
+    public void testShutdownGracefully() {
+        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(2);
+        threadPool.shutdown();//Disable new tasks from being submitted
+        try {
+            // 设定最大重试次数
+            // 等待 60s
+            if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                // 调用shutdownNow()方法，取消正在执行的任务
+                // 再次等待60s,如果还未结束，可以再次尝试或直接放弃
+                if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                    System.err.println("线程池任务未正常执行结束");
+                }
+            }
+        } catch (InterruptedException e) {
+            threadPool.shutdown();
+        }
+    }
 
 }
