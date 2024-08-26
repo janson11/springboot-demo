@@ -40,6 +40,7 @@
         <module>lab-19/lab-19-datasource-pool-hikaricp-single</module>
         <module>lab-14-spring-jdbc-template</module>
         <module>lab-14-spring-jdbc-template/lab-14-jdbctemplate</module>
+        <module>lab-88</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
