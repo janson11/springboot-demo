@@ -41,6 +41,7 @@
         <module>lab-14-spring-jdbc-template</module>
         <module>lab-14-spring-jdbc-template/lab-14-jdbctemplate</module>
         <module>lab-88</module>
+        <module>lab-88/lab-88-async</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
