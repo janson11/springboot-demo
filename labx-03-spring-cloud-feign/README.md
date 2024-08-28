@@ -29,3 +29,8 @@
 不过这里要注意，因为 DefaultFeignClientConfiguration 和 DemoProviderFeignClientConfiguration 都创建了 Logger.Level Bean，而 DefaultFeignClientConfiguration 是在 Spring 父上下文生效，会和 DemoProviderFeignClientConfiguration 所在的 Spring 子上下文共享。
 
 这样就导致从 Spring 获取 Logger.Level Bean 时，存在两个而不知道选择哪一个。因此，我们声明 DefaultFeignClientConfiguration 创建的 Logger.Level Bean 为 @Primary，优先使用它。
+
+
+实践建议:
+- 对于 Feign 自定义配置，推荐使用配置文件的方式，简单方便好管理。在配置文件的方式无法满足的情况下，使用 Spring JavaConfig 的方式作为补充。不过绝大多数场景下，都基本不需要哈~
+- 配置文件方式的优先级高于 Spring JavaConfig 方式，客户端级别的优先级高于全局级别
