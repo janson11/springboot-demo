@@ -2,8 +2,10 @@ spring:
   application:
     name: demo-provider
   cloud:
-    discovery:
-      server-addr: 127.0.0.1:8848
+    nacos:
+      discovery:
+        server-addr: http://dev-internal.nacos2.codemao.cn:8848
+
 
 server:
-  port: ${random.int[10000,19999]})}
+  port: ${random.int[10000,19999]}

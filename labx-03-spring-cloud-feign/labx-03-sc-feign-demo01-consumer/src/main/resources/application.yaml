@@ -5,7 +5,7 @@ spring:
     nacos:
       discovery:
         # Nacos 作为注册中心的配置项，对应 NacosDiscoveryProperties 配置类
-        server-addr: 127.0.0.1:8848
+        server-addr: http://dev-internal.nacos2.codemao.cn:8848
 
 server:
   port: 28080
