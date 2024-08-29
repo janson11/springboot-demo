@@ -53,3 +53,13 @@ It is generally not advisable to share an interface between a server and a clien
 拓展知识
 - 文件上传	《Spring Cloud Feign 接口上传文件》 https://www.iocoder.cn/Fight/The-Spring-Cloud-Feign-interface-uploads-files/?self
 - Form 表单提交	《Spring Cloud Feign Post 表单请求》 https://www.iocoder.cn/Fight/Spring-Cloud-Feign-Post-form-request/?self
+
+
+
+## HTTP 客户端
+   默认情况下，Feign 通过 JDK 自带的 HttpURLConnection 封装了 Client.Default，实现 HTTP 调用的客户端。因为 HttpURLConnection 缺少对 HTTP 连接池的支持，所以性能较低，在并发到达一定量级后基本会出现。
+
+因此 Feign 提供了另外两个 HTTP 客户端：
+
+ApacheHttpClient，基于 Apache HttpClient 封装
+OkHttpClient，基于 OkHttp 封装
