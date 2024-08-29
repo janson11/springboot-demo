@@ -34,3 +34,22 @@
 实践建议:
 - 对于 Feign 自定义配置，推荐使用配置文件的方式，简单方便好管理。在配置文件的方式无法满足的情况下，使用 Spring JavaConfig 的方式作为补充。不过绝大多数场景下，都基本不需要哈~
 - 配置文件方式的优先级高于 Spring JavaConfig 方式，客户端级别的优先级高于全局级别
+
+在 Spring Cloud OpenFeign 官方文档有这么一段话：
+
+FROM Feign Inheritance Support
+
+It is generally not advisable to share an interface between a server and a client. It introduces tight coupling, and also actually doesn’t work with Spring MVC in its current form (method parameter mapping is not inherited).
+
+意思是不推荐使用继承特性，因为通过 Java 接口的共享，导致服务提供者和消费者的耦合，而微服务的目的是为了服务提供者和消费者的解耦，存在一定的冲突。
+
+不过实际场景下，蛮多公司采用继承特性，显而易见的好处，可以方便服务消费者的快速接入，基本无需编写额外的代码。
+
+具体怎么选择，胖友可以自己进行评估，看看使用继承特性的情况下，在享受优点的同时，是否能够接受带来的缺点。
+
+艿艿个人意见的话，是支持采用继承特性
+
+
+拓展知识
+- 文件上传	《Spring Cloud Feign 接口上传文件》 https://www.iocoder.cn/Fight/The-Spring-Cloud-Feign-interface-uploads-files/?self
+- Form 表单提交	《Spring Cloud Feign Post 表单请求》 https://www.iocoder.cn/Fight/Spring-Cloud-Feign-Post-form-request/?self
