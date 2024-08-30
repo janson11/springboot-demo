@@ -62,4 +62,13 @@ It is generally not advisable to share an interface between a server and a clien
 因此 Feign 提供了另外两个 HTTP 客户端：
 
 ApacheHttpClient，基于 Apache HttpClient 封装
+ - org.springframework.cloud.openfeign.ribbon.HttpClientFeignLoadBalancedConfiguration
 OkHttpClient，基于 OkHttp 封装
+ - org.springframework.cloud.openfeign.ribbon.OkHttpFeignLoadBalancedConfiguration
+
+
+## Feign 和 Ribbon 都有请求重试的功能，两者都启用该功能的话，会产生冲突的问题。因此，有且只能启动一个的重试。目前比较推荐的是使用 Ribbon 来提供重试，如下是来自 Spring Cloud 开发者的说法：
+
+FROM https://github.com/spring-cloud/spring-cloud-netflix/issues/467
+
+### 在 Spring Cloud OpenFeign 中，默认创建的是 NEVER_RETRY 不进行重试。如此，我们只需要配置 Ribbon 的重试功能即可。

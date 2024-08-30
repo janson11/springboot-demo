@@ -30,6 +30,8 @@
         <module>labx-03-sc-feign-demo04-consumer</module>
         <module>labx-03-sc-feign-demo05-consumer</module>
         <module>labx-03-sc-feign-demo06A-consumer</module>
+        <module>labx-03-sc-feign-demo06B-consumer</module>
+        <module>labx-03-sc-feign-demo07-consumer</module>
     </modules>
 
 </project>
