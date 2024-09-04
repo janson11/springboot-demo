@@ -13,6 +13,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class Demo06BConsumerApplication {
     public static void main(String[] args) {
+        //生成$Proxy0的class文件，也就是代理类的字节码文件
+//        System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
         SpringApplication.run(Demo06BConsumerApplication.class, args);
     }
+
 }

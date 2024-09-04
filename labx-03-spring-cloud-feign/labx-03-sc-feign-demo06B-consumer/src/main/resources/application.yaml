@@ -17,3 +17,19 @@ feign:
     enabled: false # 是否开启。默认为 true
   okhttp:
     enabled: true
+
+  # Feign 客户端配置，对应 FeignClientProperties 配置属性类
+  client:
+    # config 配置项是 Map 类型。key 为 Feign 客户端的名字，value 为 FeignClientConfiguration 对
+    config:
+      # 全局级别配置
+      default:
+        loggerLevel: BASIC
+      # 客户端级别配置
+      demo-provider:
+        loggerLevel: FULL
+
+logging:
+  level:
+    com.janson.springcloud.labx03.feigndemo.consumer.feign: DEBUG
+
