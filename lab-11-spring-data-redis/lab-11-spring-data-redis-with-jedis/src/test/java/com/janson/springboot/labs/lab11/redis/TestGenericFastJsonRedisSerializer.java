@@ -10,13 +10,18 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * @Description:
+ * @Description: TestGenericJackson2JsonRedisSerializer
+ *
+ *  案例
+ *
+ *  {"@type":"com.janson.springboot.labs.lab11.redis.cacheobject.UserCacheObject","gender":3,"id":3,"name":"Janson3"}
+ *
  * @Author: shanjian
  * @Date: 2024/3/13 17:39
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Test01 {
+public class TestGenericFastJsonRedisSerializer {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -27,23 +32,23 @@ public class Test01 {
 
     @Test
     public void testStringSetKey() {
-        stringRedisTemplate.opsForValue().set("janson", "good");
+        stringRedisTemplate.opsForValue().set("janson3", "good");
     }
 
 
     @Test
     public void testStringSetKey02() {
-        redisTemplate.opsForValue().set("janson1", "good1");
+        redisTemplate.opsForValue().set("janson3", "good1");
     }
 
     @Test
     public void testSetAdd() {
-        stringRedisTemplate.opsForSet().add("jansonSet", "shan", "jian");
+        stringRedisTemplate.opsForSet().add("jansonSet3", "shan", "jian");
     }
 
     @Test
     public void testStringSetKeyUserCache() {
-        UserCacheObject object = new UserCacheObject().setId(1).setName("Janson").setGender(1);
+        UserCacheObject object = new UserCacheObject().setId(3).setName("Janson3").setGender(3);
         String key = String.format("user:%d", object.getId());
         redisTemplate.opsForValue().set(key, object);
     }
@@ -51,7 +56,7 @@ public class Test01 {
 
     @Test
     public void testStringGetKeyUserCache() {
-        String key = String.format("user:%d", 1);
+        String key = String.format("user:%d", 3);
         Object value = redisTemplate.opsForValue().get(key);
         System.out.println(value);
     }
