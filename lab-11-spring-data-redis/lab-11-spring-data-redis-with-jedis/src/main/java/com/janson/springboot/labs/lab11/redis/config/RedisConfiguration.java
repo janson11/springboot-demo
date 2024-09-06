@@ -46,7 +46,7 @@ public class RedisConfiguration {
     }
 
 
-    //    @Bean //PUB/SUB 使用的Bean，需要打开
+    @Bean //PUB/SUB 使用的Bean，需要打开
     public RedisMessageListenerContainer listenerContainer(RedisConnectionFactory factory) {
         //创建 RedisMessageListenerContainer 对象
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();

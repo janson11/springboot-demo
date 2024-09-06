@@ -6,6 +6,9 @@ spring:
       discovery:
         # Nacos 作为注册中心的配置项，对应 NacosDiscoveryProperties 配置类
         server-addr: http://dev-internal.nacos2.codemao.cn:8848
+    loadbalancer:
+      retry:
+        enabled: true
 
 #    loadbalancer:
 # Spring Cloud Loadbalancer 重启配置，对应 LoadBalancerRetryProperties 配置类
