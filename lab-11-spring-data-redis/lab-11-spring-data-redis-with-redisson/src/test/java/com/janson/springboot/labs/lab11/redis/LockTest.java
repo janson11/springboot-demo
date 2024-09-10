@@ -4,8 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redisson.RedissonMultiLock;
 import org.redisson.RedissonRedLock;
+import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RFuture;
 import org.redisson.api.RLock;
+import org.redisson.api.RPermitExpirableSemaphore;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
@@ -283,7 +285,15 @@ public class LockTest {
                 // 无需调用unlock方法,锁会自动释放
                 // 异步加锁
                 try {
-                    semaphore.tryAcquire(2, 10, TimeUnit.SECONDS);
+//                    semaphore.tryAcquire(2, 10, TimeUnit.SECONDS);
+//                    semaphore.acquire();
+                    boolean b = semaphore.tryAcquire(10, TimeUnit.SECONDS);
+                    if (b) {
+                        System.out.println(Thread.currentThread().getName() + String.format("线程信号量获取成功时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                    } else {
+                        System.out.println(Thread.currentThread().getName() + String.format("线程信号量获取失败时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                        semaphore.release();
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -294,13 +304,133 @@ public class LockTest {
         Thread.sleep(1000L);
 
         // 尝试加锁, 最多等待100秒,上锁以后10秒自动解锁
-        System.out.println(String.format("准备开始获得锁时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
-        boolean res = semaphore.tryAcquire(2, 10, TimeUnit.SECONDS);
+        System.out.println(Thread.currentThread().getName() + String.format("线程准备开始获得锁时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+        boolean res = semaphore.tryAcquire(10, TimeUnit.SECONDS);
         if (res) {
-            System.out.println(String.format("实际获得锁时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+            System.out.println(Thread.currentThread().getName() + String.format("线程实际获得锁时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+        } else {
+            System.out.println("获取锁失败");
+            semaphore.release();
+        }
+    }
+
+
+    /**
+     * 可过期性信号量（PermitExpirableSemaphore）
+     * 基于Redis的Redisson可过期性信号量（PermitExpirableSemaphore）是在RSemaphore对象的基础上，为每个信号增加了一个过期时间。每个信号可以通过独立的ID来辨识，释放时只能通过提交这个ID才能释放。它提供了异步（Async）、反射式（Reactive）和RxJava2标准的接口。
+     * <p>
+     * RPermitExpirableSemaphore semaphore = redisson.getPermitExpirableSemaphore("mySemaphore");
+     * String permitId = semaphore.acquire();
+     * // 获取一个信号，有效期只有2秒钟。
+     * String permitId = semaphore.acquire(2, TimeUnit.SECONDS);
+     * // ...
+     * semaphore.release(permitId);
+     *
+     * @throws InterruptedException
+     */
+    @Test
+    public void test07PermitExpirableSemaphore() throws InterruptedException {
+        RPermitExpirableSemaphore semaphore = redissonClient.getPermitExpirableSemaphore("mysemaphore");
+        semaphore.addPermits(1);
+        // 启动一个线程A,去占用锁
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // 加锁以后,10秒后自动释放锁
+                // 无需调用unlock方法,锁会自动释放
+                // 异步加锁
+                //                    semaphore.tryAcquire(2, 10, TimeUnit.SECONDS);
+//                    semaphore.acquire();
+                String permitId = null;
+                try {
+                    Thread.sleep(1000L);
+                    permitId = semaphore.tryAcquire(20, -1, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(Thread.currentThread().getName() + " permitId:" + permitId + String.format("线程信号量开始获取时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                if (permitId != null) {
+                    System.out.println(Thread.currentThread().getName() + String.format("线程信号量获取成功时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+//                    semaphore.release(permitId);
+                } else {
+                    System.out.println(Thread.currentThread().getName() + String.format("线程信号量获取失败时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                }
+
+            }
+        }).start();
+        // 简单sleep 1 秒,确保线程A成功持有锁
+        Thread.sleep(10000L);
+
+        // 尝试加锁, 最多等待100秒,上锁以后10秒自动解锁
+        System.out.println(Thread.currentThread().getName() + String.format("线程信号量开始获取时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+        String permitId = semaphore.tryAcquire(20, 10, TimeUnit.SECONDS);
+        if (permitId != null) {
+            System.out.println(Thread.currentThread().getName() + " permitId:" + permitId + String.format("线程信号量获取成功时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+//            semaphore.release(permitId);
         } else {
             System.out.println("获取锁失败");
         }
     }
+
+
+    /**
+     * 闭锁（CountDownLatch）
+     * 闭锁（CountDownLatch）是一种同步工具，它允许一个或多个线程等待，直到其他线程都完成某项工作。
+     * 闭锁的作用是让一组线程等待直到最后一个线程完成某件事情。
+     * 闭锁的计数器可以被重置，所以它可以被用来实现一组线程的同步。
+     * 基于Redis的Redisson的分布式闭锁（CountDownLatch）Java对象RCountDownLatch采用了与java.util.concurrent.CountDownLatch相似的接口和用法。
+     * 同时还提供了异步（Async）、反射式（Reactive）和RxJava2标准的接口。
+     */
+    @Test
+    public void test08CountDownLatch() throws InterruptedException {
+        RCountDownLatch latch = redissonClient.getCountDownLatch("anyCountDownLatch");
+        latch.trySetCount(3);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RCountDownLatch latch = redissonClient.getCountDownLatch("anyCountDownLatch");
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                latch.countDown();
+                System.out.println("线程" + Thread.currentThread().getName() + String.format("完成任务时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RCountDownLatch latch = redissonClient.getCountDownLatch("anyCountDownLatch");
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                latch.countDown();
+                System.out.println("线程" + Thread.currentThread().getName() + String.format("完成任务时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RCountDownLatch latch = redissonClient.getCountDownLatch("anyCountDownLatch");
+                try {
+                    Thread.sleep(3000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                latch.countDown();
+                System.out.println("线程" + Thread.currentThread().getName() + String.format("完成任务时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+            }
+        }).start();
+
+        latch.await();
+        System.out.println("线程" + Thread.currentThread().getName() + String.format("完成任务时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+        System.out.println("所有线程都完成了任务" + String.format("时间: %s", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+    }
+
 
 }
