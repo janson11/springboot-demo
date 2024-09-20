@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: default_path_to_httpbin
+          uri: http://127.0.0.1:8081
+          order: 10000
+          predicates:
+            - Path=/**
+          filters:
+            # - RequestRateLimiter=10, 20, #{@principalNameKeyResolver} ，配置 RequestRateLimiterGatewayFilterFactory 。
+            #默认情况下，基于令牌桶算法实现限流。
+            #第一个参数，burstCapacity ，令牌桶上限 。
+            #第二个参数，replenishRate ，令牌桶填充平均速率，单位：秒。
+            #第三个参数，keyResolver ，限流键解析器 Bean 对象名字，根据 #{@beanName} ，使用 SpEL 表达式，从 Spring 容器中获取 Bean 对象，
+            # 详细参见 RouteDefinitionRouteLocator#getTuple(ArgumentHints, Map<String, String>, SpelExpressionParser, BeanFactory) 处的代码。另外，这里有一个 BUG ：
+            #在 YAML 里，# 代表注释，所以第三个参数无法正确被读取，需要等待官方修复。如果比较着急使用，可以考虑将此处的 # 修改成 \# ，并修改部分相关代码以解决该 BUG 。
+            - RequestRateLimiter=10,20,\#{@principalNameKeyResolver}

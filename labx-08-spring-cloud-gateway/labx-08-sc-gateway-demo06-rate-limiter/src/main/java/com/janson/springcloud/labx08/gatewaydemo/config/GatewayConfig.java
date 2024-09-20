@@ -21,6 +21,7 @@ public class GatewayConfig {
             @Override
             public Mono<String> resolve(ServerWebExchange exchange) {
                 // 获取请求的IP
+                System.out.println("获取请求的IP" + exchange.getRequest().getRemoteAddress().getHostName());
                 return Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
             }
         };

@@ -21,7 +21,7 @@ spring:
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 1 # 令牌桶的每秒放的数量
-                redis-rate-limiter.burstCapacity: 2 # 令牌桶的最大令牌数
+                redis-rate-limiter.burstCapacity: 1 # 令牌桶的最大令牌数
                 key-resolver: "#{@ipKeyResolver}" # 获取限流Key的bean的名字
         - id: oschina
           uri: http://www.oschina.net # 路由到的目标地址
