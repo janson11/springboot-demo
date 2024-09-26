@@ -50,6 +50,7 @@
         <module>labx-08-spring-cloud-gateway/labx-08-sc-gateway-sample</module>
         <module>lab-68-spring-security-oauth</module>
         <module>lab-68-spring-security-oauth/lab-68-demo01-authorization-code-server</module>
+        <module>lab-88/lab-88-jvm</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
