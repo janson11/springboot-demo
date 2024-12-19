@@ -6,6 +6,9 @@ import java.lang.reflect.Proxy;
 
 /**
  * @Description: InvocationHandler调用处理器
+ * 一般会使用实现了 InvocationHandler接口 的类作为代理对象的生产工厂，
+ * 并且通过持有 被代理对象target，来在 invoke()方法 中对被代理对象的目标方法进行调用和增强，
+ * 这些我们都能通过下面这段代码看懂，但代理对象是如何生成的？invoke()方法 又是如何被调用的呢？
  * @Author: Janson
  * @Date: 2024/9/2 14:19
  **/

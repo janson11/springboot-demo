@@ -3,7 +3,7 @@ package com.janson.service.impl;
 import com.janson.service.Person;
 
 /**
- * @Description:
+ * @Description: 实现了 Person 和接口的 findLove()方法，可以作为被代理类
  * @Author: Janson
  * @Date: 2024/9/2 14:16
  **/
