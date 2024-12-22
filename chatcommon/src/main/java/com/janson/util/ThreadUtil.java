@@ -273,4 +273,30 @@ public class ThreadUtil {
             }
         }
     }
+
+    /**
+     * 混合线程池
+     */
+    private static final int MIXED_CODE = 0;//混合线程池核心线程数
+
+    private static final int MIXED_MAX = 128;//混合线程池最大线程数
+
+    private static final String MIXED_THREAD_AMOUNT = "mixed.thread.amount";
+
+    // 懒汉式单例创建线程池，用于混合任务
+    private static class MixedTargetThreadPoolLazyHolder {
+        // 首先从环境变量mixed.thread.amount中获取预选配置的线程池
+        // 如果没有对mixed.thread.amount进行配置，则使用常量MIXED_MAX作为线程池最大线程数
+        private static final int max = (null!=System.getProperty(MIXED_THREAD_AMOUNT)?Integer.parseInt(System.getProperty(MIXED_THREAD_AMOUNT)):MIXED_MAX);
+        // 线程池 ：用于混合任务
+        private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor
+                (max,
+                        max,
+                        KEEP_ALIVE_SECONDS,
+                        TimeUnit.SECONDS,
+                        new LinkedBlockingQueue<>(QUEUE_SIZE),
+                        new CustomThreadFactory("mixed"));
+    }
+
+
 }
