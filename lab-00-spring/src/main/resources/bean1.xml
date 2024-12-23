@@ -8,25 +8,37 @@
     <!--    <bean id="user" class="com.janson.lab00.spring.model.User" ></bean>-->
 
     <!--2 set方法注入属性-->
-<!--    <bean id="book" class="com.janson.lab00.spring.model.Book">
-        &lt;!&ndash;使用property标签设置属性值
+    <bean id="book" class="com.janson.lab00.spring.model.Book">
+        <!--使用property标签设置属性值
             name类里面属性名称
             value向属性注入的值
-        &ndash;&gt;
+        -->
         <property name="bname" value="易筋经"></property>
         <property name="bauthor" value="达摩老祖"></property>
-    </bean>-->
+        <!--null值-->
+        <!--        <property name="address">
+                    <null/>
+                </property>-->
+        <!--属性值包含特殊符号
+        1、把<>进行转义 &lt; &gt;
+        2、使用CDATA标签包裹属性值
+        -->
+        <property name="address">
+            <!--<value><![CDATA[<<南京>>]]></value>-->
+            <value>"&lt;&lt;南京&gt;&gt;"</value>
+        </property>
+    </bean>
 
     <!--3 有参数构造注入属性-->
-<!--    <bean id="orders" class="com.janson.lab00.spring.model.Orders">-->
-<!--        <constructor-arg name="oname" value="电脑"></constructor-arg>-->
-<!--        <constructor-arg name="address" value="China"></constructor-arg>-->
+    <!--    <bean id="orders" class="com.janson.lab00.spring.model.Orders">-->
+    <!--        <constructor-arg name="oname" value="电脑"></constructor-arg>-->
+    <!--        <constructor-arg name="address" value="China"></constructor-arg>-->
 
-<!--    </bean>-->
+    <!--    </bean>-->
 
 
-   <!-- 4 p名称空间进行set方法注入属性-->
-        <bean id="book" class="com.janson.lab00.spring.model.Book" p:bname="九阳神功" p:bauthor="张无忌">
-        </bean>
+    <!-- 4 p名称空间进行set方法注入属性-->
+    <!--        <bean id="book" class="com.janson.lab00.spring.model.Book" p:bname="九阳神功" p:bauthor="张无忌">-->
+    <!--        </bean>-->
 
 </beans>
