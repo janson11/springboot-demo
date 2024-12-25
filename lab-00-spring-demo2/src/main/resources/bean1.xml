@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--集合类型属性注入-->
+    <bean id="stu" class="com.janson.lab00.spring.collectiontype.Stu">
+        <!--数组类型属性注入-->
+        <property name="courses">
+            <array>
+                <value>语文</value>
+                <value>数学</value>
+                <value>英语</value>
+            </array>
+        </property>
+
+        <!--List类型属性注入-->
+        <property name="lists">
+            <list>
+                <value>张三</value>
+                <value>李四</value>
+                <value>王五</value>
+            </list>
+        </property>
+
+        <!--Map类型属性注入-->
+        <property name="maps">
+            <map>
+                <entry key="name" value="张三"/>
+                <entry key="age" value="20"/>
+            </map>
+        </property>
+        <!--Set类型属性注入-->
+        <property name="sets">
+            <set>
+                <value>男</value>
+                <value>女</value>
+            </set>
+        </property>
+    </bean>
+
+
+</beans>

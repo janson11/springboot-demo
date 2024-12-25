@@ -52,6 +52,7 @@
         <module>lab-68-spring-security-oauth/lab-68-demo01-authorization-code-server</module>
         <module>lab-88/lab-88-jvm</module>
         <module>lab-00-spring</module>
+        <module>lab-00-spring-demo2</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

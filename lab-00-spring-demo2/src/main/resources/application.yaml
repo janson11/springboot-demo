@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: lab-00-spring-demo2
+server:
+  port: 7778
