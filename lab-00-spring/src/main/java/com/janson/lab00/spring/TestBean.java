@@ -1,5 +1,6 @@
 package com.janson.lab00.spring;
 
+import com.janson.lab00.spring.bean.Emp;
 import com.janson.lab00.spring.service.UserService;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +15,7 @@ public class TestBean {
 
 
     @Test
-    public void testAdd() {
+    public void testBean1d() {
         // 1 、加载spring配置文件
         ApplicationContext context = new ClassPathXmlApplicationContext("bean2.xml");
 
@@ -22,5 +23,30 @@ public class TestBean {
         UserService userService = context.getBean("userService", UserService.class);
         //3、调用对象的方法
         userService.add();
+    }
+
+
+    @Test
+    public void testBean2() {
+        // 1 、加载spring配置文件
+        ApplicationContext context = new ClassPathXmlApplicationContext("bean3.xml");
+
+        //2、获取配置创建的对象
+        Emp emp = context.getBean("emp", Emp.class);
+        //3、调用对象的方法
+        emp.add();
+    }
+
+
+
+    @Test
+    public void testBean3() {
+        // 1 、加载spring配置文件
+        ApplicationContext context = new ClassPathXmlApplicationContext("bean4.xml");
+
+        //2、获取配置创建的对象
+        Emp emp = context.getBean("emp", Emp.class);
+        //3、调用对象的方法
+        emp.add();
     }
 }
